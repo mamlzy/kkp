@@ -129,6 +129,43 @@ def get_all_users(db: Session) -> list[UserDB]:
     return db.query(UserDB).order_by(UserDB.created_at.desc()).all()
 
 
+def update_user(
+    db: Session,
+    user_id: str,
+    name: Optional[str] = None,
+    password: Optional[str] = None,
+    username: Optional[str] = None,
+    role: Optional[UserRole] = None
+) -> Optional[UserDB]:
+    """Update a user's information."""
+    user = get_user_by_id(db, user_id)
+    if not user:
+        return None
+    
+    if name is not None:
+        user.name = name
+    if password is not None:
+        user.password = get_password_hash(password)
+    if username is not None:
+        user.username = username
+    if role is not None:
+        user.role = role
+    
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+def delete_user(db: Session, user_id: str) -> bool:
+    """Delete a user by ID."""
+    user = get_user_by_id(db, user_id)
+    if not user:
+        return False
+    db.delete(user)
+    db.commit()
+    return True
+
+
 # Dependency functions for protected routes
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),

@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Brain, FileSpreadsheet, UserPlus, LogOut, User, Shield, ShieldAlert } from "lucide-react";
+import { LayoutDashboard, Brain, FileSpreadsheet, UserPlus, LogOut, User, Shield, ShieldAlert, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserRole } from "@/types";
+import { EditProfileDialog } from "@/components/dialogs/EditProfileDialog";
 
 const baseNavItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard, roles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.USER] },
@@ -40,6 +42,7 @@ export function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -112,6 +115,14 @@ export function Layout({ children }: LayoutProps) {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
+                    onClick={() => setIsEditProfileOpen(true)}
+                    className="flex items-center gap-2"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span>Edit Profil</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
                     onClick={handleLogout}
                     className="flex items-center gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
                   >
@@ -120,6 +131,14 @@ export function Layout({ children }: LayoutProps) {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+            )}
+            
+            {/* Edit Profile Dialog */}
+            {user && (
+              <EditProfileDialog
+                open={isEditProfileOpen}
+                onOpenChange={setIsEditProfileOpen}
+              />
             )}
           </div>
         </div>

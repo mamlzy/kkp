@@ -31,6 +31,18 @@ export type RegisterRequest = {
   role: UserRole;
 };
 
+export type UpdateProfileRequest = {
+  name?: string;
+  password?: string;
+};
+
+export type UpdateUserRequest = {
+  username?: string;
+  name?: string;
+  password?: string;
+  role?: UserRole;
+};
+
 export type TokenResponse = {
   access_token: string;
   token_type: string;

@@ -9,6 +9,8 @@ import type {
   RegisterRequest,
   TokenResponse,
   User,
+  UpdateProfileRequest,
+  UpdateUserRequest,
 } from "@/types";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
@@ -170,6 +172,21 @@ export async function verifyToken(): Promise<User> {
 
 export async function getUsers(): Promise<User[]> {
   const response = await api.get<User[]>("/auth/users");
+  return response.data;
+}
+
+export async function updateMyProfile(data: UpdateProfileRequest): Promise<User> {
+  const response = await api.put<User>("/auth/me", data);
+  return response.data;
+}
+
+export async function updateUser(userId: string, data: UpdateUserRequest): Promise<User> {
+  const response = await api.put<User>(`/auth/users/${userId}`, data);
+  return response.data;
+}
+
+export async function deleteUser(userId: string): Promise<{ message: string }> {
+  const response = await api.delete<{ message: string }>(`/auth/users/${userId}`);
   return response.data;
 }
 
