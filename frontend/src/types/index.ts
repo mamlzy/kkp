@@ -2,12 +2,14 @@
  * Type definitions for the CART Student Achievement Prediction App
  */
 
-// User roles enum
-export enum UserRole {
-  SUPER_ADMIN = "SUPER_ADMIN",
-  ADMIN = "ADMIN",
-  USER = "USER",
-}
+// User roles
+export const UserRole = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  ADMIN: 'ADMIN',
+  USER: 'USER',
+} as const;
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
 // User type
 export type User = {
@@ -52,8 +54,10 @@ export type TokenResponse = {
 // Permission helpers
 export const PERMISSIONS = {
   canAccessRegister: (role: UserRole) => role === UserRole.SUPER_ADMIN,
-  canCreateModel: (role: UserRole) => role === UserRole.SUPER_ADMIN || role === UserRole.ADMIN,
-  canDeleteModel: (role: UserRole) => role === UserRole.SUPER_ADMIN || role === UserRole.ADMIN,
+  canCreateModel: (role: UserRole) =>
+    role === UserRole.SUPER_ADMIN || role === UserRole.ADMIN,
+  canDeleteModel: (role: UserRole) =>
+    role === UserRole.SUPER_ADMIN || role === UserRole.ADMIN,
   canAccessEverything: (role: UserRole) => role === UserRole.SUPER_ADMIN,
 } as const;
 
@@ -140,37 +144,36 @@ export type BatchPredictResponse = {
 
 // Feature labels in Indonesian
 export const FEATURE_LABELS: Record<keyof StudentFeatures, string> = {
-  pai: "PAI",
-  pendidikan_pancasila: "Pendidikan Pancasila",
-  bahasa_indonesia: "Bahasa Indonesia",
-  matematika: "Matematika",
-  ipa: "IPA",
-  ips: "IPS",
-  bahasa_inggris: "Bahasa Inggris",
-  penjas: "Penjas",
-  tik: "TIK",
-  sbk: "SBK",
-  prakarya: "Prakarya",
-  bahasa_sunda: "Bahasa Sunda",
-  btq: "BTQ",
-  absen: "Absen",
+  pai: 'PAI',
+  pendidikan_pancasila: 'Pendidikan Pancasila',
+  bahasa_indonesia: 'Bahasa Indonesia',
+  matematika: 'Matematika',
+  ipa: 'IPA',
+  ips: 'IPS',
+  bahasa_inggris: 'Bahasa Inggris',
+  penjas: 'Penjas',
+  tik: 'TIK',
+  sbk: 'SBK',
+  prakarya: 'Prakarya',
+  bahasa_sunda: 'Bahasa Sunda',
+  btq: 'BTQ',
+  absen: 'Absen',
 };
 
 // Feature order for forms
 export const FEATURE_ORDER: (keyof StudentFeatures)[] = [
-  "pai",
-  "pendidikan_pancasila",
-  "bahasa_indonesia",
-  "matematika",
-  "ipa",
-  "ips",
-  "bahasa_inggris",
-  "penjas",
-  "tik",
-  "sbk",
-  "prakarya",
-  "bahasa_sunda",
-  "btq",
-  "absen",
+  'pai',
+  'pendidikan_pancasila',
+  'bahasa_indonesia',
+  'matematika',
+  'ipa',
+  'ips',
+  'bahasa_inggris',
+  'penjas',
+  'tik',
+  'sbk',
+  'prakarya',
+  'bahasa_sunda',
+  'btq',
+  'absen',
 ];
-

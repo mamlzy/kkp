@@ -12,7 +12,7 @@ import {
   Pencil,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/auth-context';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { UserRole } from '@/types';
-import { EditProfileDialog } from '@/components/dialogs/EditProfileDialog';
+import { EditProfileDialog } from '@/components/dialogs/edit-profile-dialog';
 
 const baseNavItems = [
   {

@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Layout } from '@/components/layout/Layout';
-import { Dashboard } from '@/pages/Dashboard';
-import { Model } from '@/pages/Model';
-import { Prediction } from '@/pages/Prediction';
-import { Login } from '@/pages/Login';
-import { Register } from '@/pages/Register';
+import { Layout } from '@/components/layout/layout';
+import { Dashboard } from '@/pages/dashboard';
+import { Model } from '@/pages/model';
+import { Prediction } from '@/pages/prediction';
+import { Login } from '@/pages/login';
+import { Register } from '@/pages/register';
 import { Toaster } from '@/components/ui/toaster';
-import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { AuthProvider, useAuth } from '@/context/auth-context';
 import { Loader2 } from 'lucide-react';
 import { UserRole } from '@/types';
 

@@ -59,7 +59,7 @@ import {
 import { UserRole } from '@/types';
 import type { User as UserType, UpdateUserRequest } from '@/types';
 import { formatDate } from '@/lib/utils';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/auth-context';
 
 const registerSchema = z
   .object({
