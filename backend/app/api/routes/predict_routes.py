@@ -73,7 +73,8 @@ async def predict_single(
     
     return PredictResponse(
         prediction=result["prediction"],
-        probability=result["probability"]
+        probability=result["probability"],
+        nama=request.nama
     )
 
 
@@ -87,6 +88,7 @@ async def predict_batch(
     Make batch predictions from CSV file.
     
     - Upload CSV with feature columns (status column optional)
+    - Requires 'nama' and 'kode_unik' columns for student identification
     - Returns list of predictions for each row
     """
     # Validate file type
@@ -105,10 +107,21 @@ async def predict_batch(
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Gagal membaca file CSV: {str(e)}")
     
-    # Validate columns (status not required for prediction)
+    # Validate required identity columns (nama wajib, kode_unik opsional)
+    if "nama" not in df.columns:
+        raise HTTPException(
+            status_code=400, 
+            detail="Kolom 'nama' tidak ditemukan. Pastikan file CSV memiliki kolom 'nama' untuk identifikasi siswa"
+        )
+    
+    # Validate feature columns (status not required for prediction)
     is_valid, error_msg = ml_service.validate_csv_columns(df, require_status=False)
     if not is_valid:
         raise HTTPException(status_code=400, detail=error_msg)
+    
+    # Extract nama and kode_unik (opsional) before prediction
+    nama_list = df["nama"].fillna("").astype(str).tolist()
+    kode_unik_list = df["kode_unik"].fillna("").astype(str).tolist() if "kode_unik" in df.columns else [""] * len(df)
     
     # Make predictions
     try:
@@ -117,6 +130,11 @@ async def predict_batch(
         raise HTTPException(status_code=404, detail="File model tidak ditemukan")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Gagal melakukan prediksi batch: {str(e)}")
+    
+    # Add nama and kode_unik to results
+    for i, result in enumerate(results):
+        result["nama"] = nama_list[i]
+        result["kode_unik"] = kode_unik_list[i]
     
     # Save predictions to database
     for result in results:
@@ -148,6 +166,7 @@ async def predict_batch_download(
 ):
     """
     Make batch predictions and return results as CSV download.
+    Requires 'nama' column, 'kode_unik' is optional.
     """
     # Validate file type
     if not file.filename.endswith(".csv"):
@@ -165,6 +184,13 @@ async def predict_batch_download(
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Gagal membaca file CSV: {str(e)}")
     
+    # Validate required identity columns (nama wajib)
+    if "nama" not in df.columns:
+        raise HTTPException(
+            status_code=400, 
+            detail="Kolom 'nama' tidak ditemukan. Pastikan file CSV memiliki kolom 'nama' untuk identifikasi siswa"
+        )
+    
     # Validate columns
     is_valid, error_msg = ml_service.validate_csv_columns(df, require_status=False)
     if not is_valid:
@@ -176,10 +202,19 @@ async def predict_batch_download(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Gagal melakukan prediksi: {str(e)}")
     
+    # Reorder columns: nama, kode_unik (if exists), then other columns
+    cols_order = ["nama"]
+    if "kode_unik" in df.columns:
+        cols_order.append("kode_unik")
+    
     # Add predictions to dataframe
     df["prediksi"] = [r["prediction"] for r in results]
     df["probabilitas_berprestasi"] = [r["probability"].get("berprestasi", 0) for r in results]
     df["probabilitas_tidak_berprestasi"] = [r["probability"].get("tidak_berprestasi", 0) for r in results]
+    
+    # Reorder columns for better readability
+    other_cols = [c for c in df.columns if c not in cols_order]
+    df = df[cols_order + other_cols]
     
     # Convert to CSV
     output = io.BytesIO()

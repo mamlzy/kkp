@@ -21,11 +21,13 @@ export type StudentFeatures = {
 
 export type PredictionRequest = StudentFeatures & {
   model_id: number;
+  nama?: string; // Optional for single prediction
 };
 
 export type PredictionResponse = {
   prediction: string;
   probability: Record<string, number>;
+  nama?: string;
 };
 
 export type ModelMeta = {
@@ -67,6 +69,8 @@ export type DashboardSummary = {
 
 export type BatchPredictResult = {
   row_index: number;
+  nama: string;
+  kode_unik?: string; // Opsional - bisa berupa NIS atau kode unik lainnya
   input_data: Record<string, number>;
   prediction: string;
   probability: Record<string, number>;

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import type {
   ModelMeta,
   DashboardSummary,
@@ -15,6 +15,22 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// Response interceptor to handle errors and extract backend error messages
+api.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError<{ detail?: string }>) => {
+    // Extract error message from backend response
+    const errorMessage = 
+      error.response?.data?.detail || 
+      error.message || 
+      "Terjadi kesalahan yang tidak diketahui";
+    
+    // Create a new error with the extracted message
+    const customError = new Error(errorMessage);
+    return Promise.reject(customError);
+  }
+);
 
 // Dashboard
 export async function getDashboardSummary(): Promise<DashboardSummary> {

@@ -37,6 +37,7 @@ class StudentFeatures(BaseModel):
 class PredictRequest(BaseModel):
     """Request body for single prediction."""
     model_id: int = Field(..., description="ID model yang digunakan")
+    nama: Optional[str] = Field(None, description="Nama siswa (opsional)")
     pai: float = Field(..., ge=0, le=100)
     pendidikan_pancasila: float = Field(..., ge=0, le=100)
     bahasa_indonesia: float = Field(..., ge=0, le=100)
@@ -57,6 +58,7 @@ class PredictResponse(BaseModel):
     """Response body for prediction."""
     prediction: str
     probability: Dict[str, float]
+    nama: Optional[str] = None
 
 
 class ModelMeta(BaseModel):
@@ -105,6 +107,8 @@ class DashboardSummary(BaseModel):
 class BatchPredictResult(BaseModel):
     """Single result in batch prediction."""
     row_index: int
+    nama: str
+    kode_unik: Optional[str] = None  # Opsional - bisa berupa NIS atau kode unik lainnya
     input_data: Dict[str, Any]
     prediction: str
     probability: Dict[str, float]
