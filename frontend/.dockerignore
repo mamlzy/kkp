@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.git/
+.gitignore
+*.md
+.env
+.env.*
+.eslintcache
+coverage/
+.DS_Store
+

@@ -1,58 +1,50 @@
-version: '3.8'
-
 services:
   # MySQL Database
-  db:
-    image: mysql:8.0
-    container_name: kkp-mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: kkp
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
+  # db:
+  #   image: mysql:8.0
+  #   container_name: kkp-db
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+  #     MYSQL_DATABASE: ${MYSQL_DATABASE:-kkp}
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #     - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+  #   healthcheck:
+  #     test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+  #     interval: 10s
+  #     timeout: 20s
+  #     retries: 10
+  #     start_period: 30s
 
   # Backend FastAPI
-  backend:
+  kkp-api:
+    container_name: kkp-api
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: kkp-backend
     restart: unless-stopped
-    ports:
-      - "8000:8000"
     environment:
       - DB_HOST=db
       - DB_PORT=3306
       - DB_USER=root
-      - DB_PASSWORD=root
-      - DB_NAME=kkp
-    depends_on:
-      db:
-        condition: service_healthy
+      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
+      - DB_NAME=${MYSQL_DATABASE:-kkp}
     volumes:
-      - ./backend/app/models:/app/app/models
-      - ./backend/app/uploads:/app/app/uploads
+      - backend_models:/app/app/models
+      - backend_uploads:/app/app/uploads
 
   # Frontend
-  frontend:
+  kkp-web:
+    container_name: kkp-web
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: kkp-frontend
     restart: unless-stopped
-    ports:
-      - "5173:80"
     depends_on:
-      - backend
+      - kkp-api
 
 volumes:
   mysql_data:
-
+  backend_models:
+  backend_uploads:
