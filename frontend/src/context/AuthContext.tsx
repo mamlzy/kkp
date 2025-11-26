@@ -5,18 +5,18 @@ import {
   useEffect,
   useCallback,
   type ReactNode,
-} from "react";
+} from 'react';
 import {
   login as apiLogin,
   verifyToken,
   getStoredToken,
   setStoredToken,
   clearStoredToken,
-} from "@/lib/api";
-import type { User, LoginRequest, UserRole } from "@/types";
-import { PERMISSIONS } from "@/types";
+} from '@/lib/api';
+import type { User, LoginRequest, UserRole } from '@/types';
+import { PERMISSIONS } from '@/types';
 
-interface AuthContextType {
+type AuthContextType = {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -26,13 +26,13 @@ interface AuthContextType {
   canAccessRegister: boolean;
   canCreateModel: boolean;
   canDeleteModel: boolean;
-}
+};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-interface AuthProviderProps {
+type AuthProviderProps = {
   children: ReactNode;
-}
+};
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
@@ -88,11 +88,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export function useAuth() {
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-}
-
+};

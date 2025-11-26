@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "eslint:fix": "eslint src --fix",
+    "typecheck": "tsc --noEmit --incremental --watch"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

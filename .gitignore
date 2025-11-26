@@ -103,4 +103,4 @@ logs/
 *.tmp
 *.temp
 .cache/
-
+tsconfig.tsbuildinfo

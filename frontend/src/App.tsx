@@ -1,15 +1,15 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Layout } from "@/components/layout/Layout";
-import { Dashboard } from "@/pages/Dashboard";
-import { Model } from "@/pages/Model";
-import { Prediction } from "@/pages/Prediction";
-import { Login } from "@/pages/Login";
-import { Register } from "@/pages/Register";
-import { Toaster } from "@/components/ui/toaster";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
-import { Loader2 } from "lucide-react";
-import { UserRole } from "@/types";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Layout } from '@/components/layout/Layout';
+import { Dashboard } from '@/pages/Dashboard';
+import { Model } from '@/pages/Model';
+import { Prediction } from '@/pages/Prediction';
+import { Login } from '@/pages/Login';
+import { Register } from '@/pages/Register';
+import { Toaster } from '@/components/ui/toaster';
+import { AuthProvider, useAuth } from '@/context/AuthContext';
+import { Loader2 } from 'lucide-react';
+import { UserRole } from '@/types';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,20 +24,20 @@ const queryClient = new QueryClient({
 // Loading component
 function LoadingScreen() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
-      <div className="flex flex-col items-center gap-4">
-        <Loader2 className="h-10 w-10 animate-spin text-indigo-400" />
-        <p className="text-slate-400 text-sm">Memuat...</p>
+    <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900'>
+      <div className='flex flex-col items-center gap-4'>
+        <Loader2 className='h-10 w-10 animate-spin text-indigo-400' />
+        <p className='text-slate-400 text-sm'>Memuat...</p>
       </div>
     </div>
   );
 }
 
 // Protected route wrapper
-interface ProtectedRouteProps {
+type ProtectedRouteProps = {
   children: React.ReactNode;
   allowedRoles?: UserRole[];
-}
+};
 
 function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -47,12 +47,12 @@ function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to='/login' replace />;
   }
 
   // Check role-based access
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to='/' replace />;
   }
 
   return <>{children}</>;
@@ -67,7 +67,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to='/' replace />;
   }
 
   return <>{children}</>;
@@ -78,7 +78,7 @@ function AppRoutes() {
     <Routes>
       {/* Public routes */}
       <Route
-        path="/login"
+        path='/login'
         element={
           <PublicRoute>
             <Login />
@@ -88,7 +88,7 @@ function AppRoutes() {
 
       {/* Protected routes */}
       <Route
-        path="/"
+        path='/'
         element={
           <ProtectedRoute>
             <Layout>
@@ -98,7 +98,7 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/model"
+        path='/model'
         element={
           <ProtectedRoute>
             <Layout>
@@ -108,7 +108,7 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/prediksi"
+        path='/prediksi'
         element={
           <ProtectedRoute>
             <Layout>
@@ -118,7 +118,7 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/register"
+        path='/register'
         element={
           <ProtectedRoute allowedRoles={[UserRole.SUPER_ADMIN]}>
             <Layout>
@@ -129,7 +129,7 @@ function AppRoutes() {
       />
 
       {/* Catch all - redirect to home */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path='*' element={<Navigate to='/' replace />} />
     </Routes>
   );
 }

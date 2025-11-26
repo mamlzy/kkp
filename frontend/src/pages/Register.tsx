@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Watch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -144,9 +144,9 @@ export function Register() {
     register,
     handleSubmit,
     setValue,
-    watch,
     reset,
     formState: { errors },
+    control,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -158,15 +158,12 @@ export function Register() {
     register: registerEdit,
     handleSubmit: handleSubmitEdit,
     setValue: setValueEdit,
-    watch: watchEdit,
     reset: resetEdit,
     formState: { errors: errorsEdit },
+    control: editControl,
   } = useForm<EditUserFormData>({
     resolver: zodResolver(editUserSchema),
   });
-
-  const selectedRole = watch('role');
-  const selectedEditRole = watchEdit('role');
 
   const { data: users, isLoading: usersLoading } = useQuery({
     queryKey: ['users'],
@@ -381,34 +378,43 @@ export function Register() {
 
               <div className='space-y-2'>
                 <Label htmlFor='role'>Role</Label>
-                <Select
-                  value={selectedRole}
-                  onValueChange={(value: UserRole) => setValue('role', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder='Pilih role' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={UserRole.USER}>
-                      <div className='flex items-center gap-2'>
-                        <User className='h-4 w-4' />
-                        User
-                      </div>
-                    </SelectItem>
-                    <SelectItem value={UserRole.ADMIN}>
-                      <div className='flex items-center gap-2'>
-                        <Shield className='h-4 w-4' />
-                        Admin
-                      </div>
-                    </SelectItem>
-                    <SelectItem value={UserRole.SUPER_ADMIN}>
-                      <div className='flex items-center gap-2'>
-                        <ShieldAlert className='h-4 w-4' />
-                        Super Admin
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                <Watch
+                  control={control}
+                  names={['role']}
+                  render={([selectedRole]) => (
+                    <Select
+                      value={selectedRole}
+                      onValueChange={(value: UserRole) =>
+                        setValue('role', value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder='Pilih role' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={UserRole.USER}>
+                          <div className='flex items-center gap-2'>
+                            <User className='h-4 w-4' />
+                            User
+                          </div>
+                        </SelectItem>
+                        <SelectItem value={UserRole.ADMIN}>
+                          <div className='flex items-center gap-2'>
+                            <Shield className='h-4 w-4' />
+                            Admin
+                          </div>
+                        </SelectItem>
+                        <SelectItem value={UserRole.SUPER_ADMIN}>
+                          <div className='flex items-center gap-2'>
+                            <ShieldAlert className='h-4 w-4' />
+                            Super Admin
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+
                 {errors.role && (
                   <p className='text-sm text-destructive'>
                     {errors.role.message}
@@ -643,36 +649,43 @@ export function Register() {
 
                 <div className='space-y-2'>
                   <Label htmlFor='edit-role'>Role</Label>
-                  <Select
-                    value={selectedEditRole}
-                    onValueChange={(value: UserRole) =>
-                      setValueEdit('role', value)
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder='Pilih role' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={UserRole.USER}>
-                        <div className='flex items-center gap-2'>
-                          <User className='h-4 w-4' />
-                          User
-                        </div>
-                      </SelectItem>
-                      <SelectItem value={UserRole.ADMIN}>
-                        <div className='flex items-center gap-2'>
-                          <Shield className='h-4 w-4' />
-                          Admin
-                        </div>
-                      </SelectItem>
-                      <SelectItem value={UserRole.SUPER_ADMIN}>
-                        <div className='flex items-center gap-2'>
-                          <ShieldAlert className='h-4 w-4' />
-                          Super Admin
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Watch
+                    control={editControl}
+                    names={['role']}
+                    render={([editSelectedRole]) => (
+                      <Select
+                        value={editSelectedRole}
+                        onValueChange={(value: UserRole) =>
+                          setValueEdit('role', value)
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder='Pilih role' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value={UserRole.USER}>
+                            <div className='flex items-center gap-2'>
+                              <User className='h-4 w-4' />
+                              User
+                            </div>
+                          </SelectItem>
+                          <SelectItem value={UserRole.ADMIN}>
+                            <div className='flex items-center gap-2'>
+                              <Shield className='h-4 w-4' />
+                              Admin
+                            </div>
+                          </SelectItem>
+                          <SelectItem value={UserRole.SUPER_ADMIN}>
+                            <div className='flex items-center gap-2'>
+                              <ShieldAlert className='h-4 w-4' />
+                              Super Admin
+                            </div>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+
                   {errorsEdit.role && (
                     <p className='text-sm text-destructive'>
                       {errorsEdit.role.message}
