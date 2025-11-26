@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, Trash2, FileUp, Loader2, AlertCircle } from "lucide-react";
+import { Plus, Trash2, FileUp, Loader2, AlertCircle, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,6 +31,7 @@ import {
 import { getModels, deleteModel, trainModel, getTemplateUrl } from "@/lib/api";
 import { formatDate, formatAccuracy } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/context/AuthContext";
 import type { ModelMeta } from "@/types";
 
 export function Model() {
@@ -40,6 +41,7 @@ export function Model() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { canCreateModel, canDeleteModel } = useAuth();
 
   const { data: models, isLoading } = useQuery({
     queryKey: ["models"],
@@ -141,8 +143,12 @@ export function Model() {
           </Button>
           <Dialog open={isTrainDialogOpen} onOpenChange={setIsTrainDialogOpen}>
             <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
+              <Button disabled={!canCreateModel} title={!canCreateModel ? "Anda tidak memiliki akses untuk membuat model" : undefined}>
+                {!canCreateModel ? (
+                  <Lock className="h-4 w-4 mr-2" />
+                ) : (
+                  <Plus className="h-4 w-4 mr-2" />
+                )}
                 Buat Model
               </Button>
             </DialogTrigger>
@@ -272,9 +278,14 @@ export function Model() {
                         variant="ghost"
                         size="icon"
                         onClick={() => handleDeleteModel(model)}
-                        disabled={deleteMutation.isPending}
+                        disabled={deleteMutation.isPending || !canDeleteModel}
+                        title={!canDeleteModel ? "Anda tidak memiliki akses untuk menghapus model" : undefined}
                       >
-                        <Trash2 className="h-4 w-4 text-destructive" />
+                        {!canDeleteModel ? (
+                          <Lock className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        )}
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -288,12 +299,16 @@ export function Model() {
               </div>
               <h3 className="font-semibold mb-1">Belum ada model</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Buat model pertama Anda dengan mengupload dataset CSV
+                {canCreateModel 
+                  ? "Buat model pertama Anda dengan mengupload dataset CSV"
+                  : "Belum ada model yang tersedia. Hubungi admin untuk membuat model."}
               </p>
-              <Button onClick={() => setIsTrainDialogOpen(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Buat Model
-              </Button>
+              {canCreateModel && (
+                <Button onClick={() => setIsTrainDialogOpen(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Buat Model
+                </Button>
+              )}
             </div>
           )}
         </CardContent>

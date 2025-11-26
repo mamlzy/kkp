@@ -3,6 +3,17 @@
 
 USE kkp;
 
+-- Users table for authentication
+CREATE TABLE IF NOT EXISTS users (
+    id VARCHAR(36) PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('SUPER_ADMIN', 'ADMIN', 'USER') NOT NULL DEFAULT 'USER',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 -- Models table
 CREATE TABLE IF NOT EXISTS models (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -38,4 +49,15 @@ CREATE TABLE IF NOT EXISTS predictions (
 CREATE INDEX idx_models_created_at ON models(created_at);
 CREATE INDEX idx_predictions_model_id ON predictions(model_id);
 CREATE INDEX idx_predictions_created_at ON predictions(created_at);
+CREATE INDEX idx_users_username ON users(username);
+
+-- Seed initial SUPER_ADMIN user
+-- Password: rahasia (hashed with bcrypt)
+INSERT IGNORE INTO users (id, username, name, password, role) VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    'superadmin',
+    'Super Admin',
+    '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/X4.qH9sIeAPrLZoHe',
+    'SUPER_ADMIN'
+);
 

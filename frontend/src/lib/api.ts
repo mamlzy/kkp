@@ -5,6 +5,10 @@ import type {
   PredictionRequest,
   PredictionResponse,
   BatchPredictResponse,
+  LoginRequest,
+  RegisterRequest,
+  TokenResponse,
+  User,
 } from "@/types";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
@@ -16,10 +20,46 @@ const api = axios.create({
   },
 });
 
+// Token management
+const TOKEN_KEY = "auth_token";
+
+export function getStoredToken(): string | null {
+  return localStorage.getItem(TOKEN_KEY);
+}
+
+export function setStoredToken(token: string): void {
+  localStorage.setItem(TOKEN_KEY, token);
+}
+
+export function clearStoredToken(): void {
+  localStorage.removeItem(TOKEN_KEY);
+}
+
+// Request interceptor to add auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = getStoredToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 // Response interceptor to handle errors and extract backend error messages
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError<{ detail?: string }>) => {
+    // Handle 401 errors - clear token and redirect to login
+    if (error.response?.status === 401) {
+      clearStoredToken();
+      // Don't redirect if already on login page
+      if (!window.location.pathname.includes("/login")) {
+        window.location.href = "/login";
+      }
+    }
+    
     // Extract error message from backend response
     const errorMessage = 
       error.response?.data?.detail || 
@@ -105,6 +145,32 @@ export async function downloadBatchResults(file: File, modelId: number): Promise
 // Template
 export function getTemplateUrl(): string {
   return `${API_BASE_URL}/template/csv`;
+}
+
+// Auth
+export async function login(data: LoginRequest): Promise<TokenResponse> {
+  const response = await api.post<TokenResponse>("/auth/login", data);
+  return response.data;
+}
+
+export async function register(data: RegisterRequest): Promise<User> {
+  const response = await api.post<User>("/auth/register", data);
+  return response.data;
+}
+
+export async function getCurrentUser(): Promise<User> {
+  const response = await api.get<User>("/auth/me");
+  return response.data;
+}
+
+export async function verifyToken(): Promise<User> {
+  const response = await api.post<User>("/auth/verify");
+  return response.data;
+}
+
+export async function getUsers(): Promise<User[]> {
+  const response = await api.get<User[]>("/auth/users");
+  return response.data;
 }
 
 export default api;

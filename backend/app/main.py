@@ -6,8 +6,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
-from app.api.routes import model_routes, predict_routes, dataset_routes
+from app.api.routes import model_routes, predict_routes, dataset_routes, auth_routes
 from app.services.db_service import init_db
+from app.services.auth_service import seed_super_admin, UserDB
 
 load_dotenv()
 
@@ -27,6 +28,7 @@ app.add_middleware(
 )
 
 # Include routers
+app.include_router(auth_routes.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(model_routes.router, prefix="/api/v1", tags=["Models"])
 app.include_router(predict_routes.router, prefix="/api/v1", tags=["Predictions"])
 app.include_router(dataset_routes.router, prefix="/api/v1", tags=["Datasets"])
@@ -39,6 +41,8 @@ async def startup_event():
     # Create models directory if not exists
     os.makedirs("app/models", exist_ok=True)
     os.makedirs("app/uploads", exist_ok=True)
+    # Seed super admin user
+    seed_super_admin()
 
 
 @app.get("/")

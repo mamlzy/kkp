@@ -2,6 +2,49 @@
  * Type definitions for the CART Student Achievement Prediction App
  */
 
+// User roles enum
+export enum UserRole {
+  SUPER_ADMIN = "SUPER_ADMIN",
+  ADMIN = "ADMIN",
+  USER = "USER",
+}
+
+// User type
+export type User = {
+  id: string;
+  username: string;
+  name: string;
+  role: UserRole;
+  created_at: string;
+};
+
+// Auth types
+export type LoginRequest = {
+  username: string;
+  password: string;
+};
+
+export type RegisterRequest = {
+  username: string;
+  name: string;
+  password: string;
+  role: UserRole;
+};
+
+export type TokenResponse = {
+  access_token: string;
+  token_type: string;
+  user: User;
+};
+
+// Permission helpers
+export const PERMISSIONS = {
+  canAccessRegister: (role: UserRole) => role === UserRole.SUPER_ADMIN,
+  canCreateModel: (role: UserRole) => role === UserRole.SUPER_ADMIN || role === UserRole.ADMIN,
+  canDeleteModel: (role: UserRole) => role === UserRole.SUPER_ADMIN || role === UserRole.ADMIN,
+  canAccessEverything: (role: UserRole) => role === UserRole.SUPER_ADMIN,
+} as const;
+
 export type StudentFeatures = {
   pai: number;
   pendidikan_pancasila: number;
