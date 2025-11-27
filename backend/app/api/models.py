@@ -83,6 +83,11 @@ class ModelTrainResponse(BaseModel):
     created_at: str
 
 
+class ModelUpdateRequest(BaseModel):
+    """Request body for updating model."""
+    name: str = Field(..., min_length=1, max_length=255, description="Nama model baru")
+
+
 class DatasetMeta(BaseModel):
     """Dataset metadata."""
     id: int

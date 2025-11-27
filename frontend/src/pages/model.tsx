@@ -1,6 +1,14 @@
 import { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Trash2, FileUp, Loader2, AlertCircle, Lock } from 'lucide-react';
+import {
+  Plus,
+  Trash2,
+  FileUp,
+  Loader2,
+  AlertCircle,
+  Lock,
+  Pencil,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -28,7 +36,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { getModels, deleteModel, trainModel, getTemplateUrl } from '@/lib/api';
+import {
+  getModels,
+  deleteModel,
+  trainModel,
+  updateModel,
+  getTemplateUrl,
+} from '@/lib/api';
 import { formatDate, formatAccuracy } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/context/auth-context';
@@ -36,7 +50,10 @@ import type { ModelMeta } from '@/types';
 
 export function Model() {
   const [isTrainDialogOpen, setIsTrainDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [modelName, setModelName] = useState('');
+  const [editingModel, setEditingModel] = useState<ModelMeta | null>(null);
+  const [editModelName, setEditModelName] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
@@ -93,6 +110,30 @@ export function Model() {
     },
   });
 
+  const updateMutation = useMutation({
+    mutationFn: ({ id, name }: { id: number; name: string }) =>
+      updateModel(id, { name }),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['models'] });
+      setIsEditDialogOpen(false);
+      setEditingModel(null);
+      setEditModelName('');
+      toast({
+        title: 'Model berhasil diperbarui',
+        description: `Nama model diubah menjadi "${data.name}"`,
+        variant: 'success',
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Gagal memperbarui model',
+        description:
+          error.message || 'Terjadi kesalahan saat memperbarui model',
+        variant: 'destructive',
+      });
+    },
+  });
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -126,6 +167,27 @@ export function Model() {
     ) {
       deleteMutation.mutate(model.id);
     }
+  };
+
+  const handleEditModel = (model: ModelMeta) => {
+    setEditingModel(model);
+    setEditModelName(model.name);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateModel = () => {
+    if (!editingModel) return;
+
+    if (!editModelName.trim()) {
+      toast({
+        title: 'Nama model tidak boleh kosong',
+        description: 'Silakan masukkan nama model',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    updateMutation.mutate({ id: editingModel.id, name: editModelName.trim() });
   };
 
   return (
@@ -234,6 +296,51 @@ export function Model() {
         </div>
       </div>
 
+      {/* Edit Model Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className='sm:max-w-md'>
+          <DialogHeader>
+            <DialogTitle>Edit Nama Model</DialogTitle>
+            <DialogDescription>
+              Ubah nama model "{editingModel?.name}"
+            </DialogDescription>
+          </DialogHeader>
+          <div className='space-y-4 py-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='edit-model-name'>Nama Model</Label>
+              <Input
+                id='edit-model-name'
+                placeholder='Masukkan nama model'
+                value={editModelName}
+                onChange={(e) => setEditModelName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && editModelName.trim()) {
+                    handleUpdateModel();
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant='outline'
+              onClick={() => setIsEditDialogOpen(false)}
+            >
+              Batal
+            </Button>
+            <Button
+              onClick={handleUpdateModel}
+              disabled={!editModelName.trim() || updateMutation.isPending}
+            >
+              {updateMutation.isPending && (
+                <Loader2 className='h-4 w-4 mr-2 animate-spin' />
+              )}
+              Simpan
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Models Table */}
       <Card className='animate-fade-in border-none shadow-lg'>
         <CardHeader>
@@ -272,23 +379,43 @@ export function Model() {
                       {formatDate(model.created_at)}
                     </TableCell>
                     <TableCell className='text-right'>
-                      <Button
-                        variant='ghost'
-                        size='icon'
-                        onClick={() => handleDeleteModel(model)}
-                        disabled={deleteMutation.isPending || !canDeleteModel}
-                        title={
-                          !canDeleteModel
-                            ? 'Anda tidak memiliki akses untuk menghapus model'
-                            : undefined
-                        }
-                      >
-                        {!canDeleteModel ? (
-                          <Lock className='h-4 w-4 text-muted-foreground' />
-                        ) : (
-                          <Trash2 className='h-4 w-4 text-destructive' />
-                        )}
-                      </Button>
+                      <div className='flex items-center justify-end gap-2'>
+                        <Button
+                          variant='ghost'
+                          size='icon'
+                          onClick={() => handleEditModel(model)}
+                          disabled={updateMutation.isPending || !canCreateModel}
+                          title={
+                            !canCreateModel
+                              ? 'Anda tidak memiliki akses untuk mengedit model'
+                              : 'Edit nama model'
+                          }
+                          className='group'
+                        >
+                          {!canCreateModel ? (
+                            <Lock className='h-4 w-4 text-muted-foreground' />
+                          ) : (
+                            <Pencil className='h-4 w-4 text-primary group-hover:text-primary-foreground' />
+                          )}
+                        </Button>
+                        <Button
+                          variant='ghost'
+                          size='icon'
+                          onClick={() => handleDeleteModel(model)}
+                          disabled={deleteMutation.isPending || !canDeleteModel}
+                          title={
+                            !canDeleteModel
+                              ? 'Anda tidak memiliki akses untuk menghapus model'
+                              : 'Hapus model'
+                          }
+                        >
+                          {!canDeleteModel ? (
+                            <Lock className='h-4 w-4 text-muted-foreground' />
+                          ) : (
+                            <Trash2 className='h-4 w-4 text-destructive' />
+                          )}
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

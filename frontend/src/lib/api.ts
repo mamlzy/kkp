@@ -95,6 +95,14 @@ export async function deleteModel(id: number): Promise<void> {
   await api.delete(`/models/${id}`);
 }
 
+export async function updateModel(
+  id: number,
+  data: { name: string },
+): Promise<ModelMeta> {
+  const response = await api.put<ModelMeta>(`/models/${id}`, data);
+  return response.data;
+}
+
 export async function trainModel(
   file: File,
   name?: string,

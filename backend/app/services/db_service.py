@@ -105,6 +105,17 @@ def get_all_models(db: Session) -> List[ModelDB]:
     return db.query(ModelDB).order_by(ModelDB.created_at.desc()).all()
 
 
+def update_model(db: Session, model_id: int, name: str) -> Optional[ModelDB]:
+    """Update a model's name."""
+    model = db.query(ModelDB).filter(ModelDB.id == model_id).first()
+    if model:
+        model.name = name
+        db.commit()
+        db.refresh(model)
+        return model
+    return None
+
+
 def delete_model(db: Session, model_id: int) -> bool:
     """Delete a model by ID."""
     model = db.query(ModelDB).filter(ModelDB.id == model_id).first()

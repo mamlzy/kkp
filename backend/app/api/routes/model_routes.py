@@ -12,9 +12,9 @@ import io
 
 from sqlalchemy.orm import Session
 
-from app.api.models import ModelMeta, ModelTrainResponse, DashboardSummary, REQUIRED_COLUMNS
+from app.api.models import ModelMeta, ModelTrainResponse, ModelUpdateRequest, DashboardSummary, REQUIRED_COLUMNS
 from app.services.db_service import (
-    get_db, create_model, get_model, get_all_models, delete_model,
+    get_db, create_model, get_model, get_all_models, update_model, delete_model,
     get_latest_model, get_all_datasets, get_prediction_stats, get_status_distribution
 )
 from app.services.ml_service import ml_service
@@ -124,6 +124,33 @@ async def get_model_detail(model_id: int, db: Session = Depends(get_db)):
         metrics=metrics,
         dataset_path=model.dataset_path,
         created_at=model.created_at
+    )
+
+
+@router.put("/models/{model_id}", response_model=ModelMeta)
+async def update_model_endpoint(
+    model_id: int,
+    request: ModelUpdateRequest,
+    db: Session = Depends(get_db)
+):
+    """Update a model's name."""
+    model = get_model(db, model_id)
+    if not model:
+        raise HTTPException(status_code=404, detail="Model tidak ditemukan")
+    
+    updated_model = update_model(db, model_id, request.name)
+    if not updated_model:
+        raise HTTPException(status_code=500, detail="Gagal memperbarui model")
+    
+    metrics = json.loads(updated_model.metrics) if updated_model.metrics else None
+    
+    return ModelMeta(
+        id=updated_model.id,
+        name=updated_model.name,
+        accuracy=updated_model.accuracy,
+        metrics=metrics,
+        dataset_path=updated_model.dataset_path,
+        created_at=updated_model.created_at
     )
 
 
