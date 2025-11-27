@@ -106,13 +106,9 @@ pip install -r requirements.txt
 
 # Konfigurasi database
 # Buat file .env dengan konfigurasi berikut:
-# DB_HOST=localhost
-# DB_PORT=3306
-# DB_USER=root
-# DB_PASSWORD=your_db_password
-# DB_NAME=kkp
+# DATABASE_URL=mysql://username:password@localhost:3306/database
 # SUPER_ADMIN_PASSWORD=your_superadmin_password
-# JWT_SECRET_KEY=you_jwrt_secret
+# JWT_SECRET_KEY=your_jwt_secret
 
 # Jalankan server
 uvicorn app.main:app --reload --port 5000
