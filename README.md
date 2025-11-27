@@ -84,8 +84,8 @@ docker-compose up -d
 
 # Akses aplikasi
 # Frontend: http://localhost:5173
-# Backend API: http://localhost:8000
-# API Docs: http://localhost:8000/docs
+# Backend API: http://localhost:5000
+# API Docs: http://localhost:5000/docs
 ```
 
 ### Development Mode
@@ -115,7 +115,7 @@ pip install -r requirements.txt
 # JWT_SECRET_KEY=you_jwrt_secret
 
 # Jalankan server
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload --port 5000
 ```
 
 #### Frontend
