@@ -293,7 +293,7 @@ export function Prediction() {
 
       {/* Prediction Tabs */}
       <Tabs defaultValue='single' className='animate-fade-in'>
-        <TabsList className='grid w-full max-w-md grid-cols-2'>
+        <TabsList className='grid w-full grid-cols-2'>
           <TabsTrigger value='single' className='gap-2'>
             <User className='h-4 w-4' />
             Satu Siswa
