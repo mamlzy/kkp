@@ -193,14 +193,14 @@ export function Model() {
   return (
     <div className='space-y-8'>
       {/* Page Header */}
-      <div className='flex items-center justify-between animate-fade-in'>
+      <div className='flex md:items-center gap-4 flex-col md:flex-row justify-between animate-fade-in'>
         <div>
           <h1 className='text-3xl font-bold tracking-tight'>Manajemen Model</h1>
           <p className='text-muted-foreground mt-1'>
             Kelola model untuk prediksi siswa berprestasi
           </p>
         </div>
-        <div className='flex gap-2'>
+        <div className='flex flex-wrap gap-2'>
           <Button variant='outline' asChild>
             <a href={getTemplateUrl()} download>
               <FileUp className='h-4 w-4 mr-2' />
