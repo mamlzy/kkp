@@ -11,6 +11,8 @@ import {
   ShieldAlert,
   Pencil,
   GraduationCap,
+  Menu,
+  X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
@@ -74,6 +76,7 @@ export function Layout({ children }: LayoutProps) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -91,18 +94,24 @@ export function Layout({ children }: LayoutProps) {
       <div>
         <header className='sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md'>
           <div className='container flex h-16 items-center justify-between px-4'>
+            {/* Logo */}
             <div className='flex items-center gap-3'>
               <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-cyan-600 text-white font-bold text-lg shadow-lg shadow-primary/30'>
                 <GraduationCap className='h-6 w-6' />
               </div>
-              <div>
+              <div className='hidden sm:block'>
                 <h1 className='font-bold text-lg leading-tight'>SIPRESTA</h1>
                 <p className='text-xs text-muted-foreground'>
                   Sistem Prediksi Prestasi Siswa
                 </p>
               </div>
+              <div className='sm:hidden'>
+                <h1 className='font-bold text-base leading-tight'>SIPRESTA</h1>
+              </div>
             </div>
-            <div className='flex items-center gap-4'>
+
+            {/* Desktop Navigation */}
+            <div className='hidden lg:flex items-center gap-4'>
               <nav className='flex items-center gap-1'>
                 {navItems.map((item) => {
                   const isActive = location.pathname === item.href;
@@ -129,12 +138,12 @@ export function Layout({ children }: LayoutProps) {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant='outline'
-                      className='flex items-center gap-2 px-3'
+                      className='flex items-center gap-2 px-3 group'
                     >
-                      <div className='flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-primary to-cyan-600 text-white text-xs font-semibold'>
+                      <div className='flex h-7 w-7 items-center justify-center group-hover:bg-white rounded-full bg-primary text-white group-hover:text-primary text-xs font-semibold'>
                         {user.name.charAt(0).toUpperCase()}
                       </div>
-                      <span className='hidden sm:inline text-sm font-medium'>
+                      <span className='hidden xl:inline  text-sm font-medium'>
                         {user.name}
                       </span>
                     </Button>
@@ -149,10 +158,10 @@ export function Layout({ children }: LayoutProps) {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className='flex items-center gap-2'>
+                    <DropdownMenuLabel className='flex items-center gap-2 font-normal'>
                       {roleIcons[user.role]}
                       <span>{roleLabels[user.role]}</span>
-                    </DropdownMenuItem>
+                    </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => setIsEditProfileOpen(true)}
@@ -172,16 +181,107 @@ export function Layout({ children }: LayoutProps) {
                   </DropdownMenuContent>
                 </DropdownMenu>
               )}
-              {/* Edit Profile Dialog */}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className='flex lg:hidden items-center gap-2'>
               {user && (
-                <EditProfileDialog
-                  open={isEditProfileOpen}
-                  onOpenChange={setIsEditProfileOpen}
-                />
+                <Button
+                  variant='ghost'
+                  size='icon'
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className='h-10 w-10'
+                >
+                  {isMobileMenuOpen ? (
+                    <X className='h-5 w-5' />
+                  ) : (
+                    <Menu className='h-5 w-5' />
+                  )}
+                </Button>
               )}
             </div>
           </div>
+
+          {/* Mobile Navigation Menu */}
+          {isMobileMenuOpen && (
+            <div className='lg:hidden border-t bg-white/95 backdrop-blur-md'>
+              <nav className='container px-4 py-4 flex flex-col gap-2'>
+                {navItems.map((item) => {
+                  const isActive = location.pathname === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn(
+                        'flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200',
+                        isActive
+                          ? 'bg-primary text-white shadow-md shadow-primary/30'
+                          : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                      )}
+                    >
+                      <item.icon className='h-5 w-5' />
+                      {item.label}
+                    </Link>
+                  );
+                })}
+                {user && (
+                  <>
+                    <div className='my-2 border-t' />
+                    <div className='px-4 py-2'>
+                      <div className='flex items-center gap-3 mb-3'>
+                        <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-cyan-600 text-white text-sm font-semibold'>
+                          {user.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <p className='text-sm font-medium'>{user.name}</p>
+                          <p className='text-xs text-muted-foreground'>
+                            @{user.username}
+                          </p>
+                        </div>
+                      </div>
+                      <div className='flex items-center gap-2 text-sm text-muted-foreground mb-3'>
+                        {roleIcons[user.role]}
+                        <span>{roleLabels[user.role]}</span>
+                      </div>
+                    </div>
+                    <Button
+                      variant='outline'
+                      onClick={() => {
+                        setIsEditProfileOpen(true);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className='flex items-center gap-2 justify-start px-4 py-3 h-auto'
+                    >
+                      <Pencil className='h-4 w-4' />
+                      <span>Edit Profil</span>
+                    </Button>
+                    <Button
+                      variant='outline'
+                      onClick={() => {
+                        handleLogout();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className='flex items-center gap-2 justify-start px-4 py-3 h-auto text-red-600 hover:text-red-600 hover:bg-red-50 border-red-200'
+                    >
+                      <LogOut className='h-4 w-4' />
+                      <span>Keluar</span>
+                    </Button>
+                  </>
+                )}
+              </nav>
+            </div>
+          )}
         </header>
+
+        {/* Edit Profile Dialog */}
+        {user && (
+          <EditProfileDialog
+            open={isEditProfileOpen}
+            onOpenChange={setIsEditProfileOpen}
+          />
+        )}
+
         {/* Main Content */}
         <main className='container px-4 py-8'>{children}</main>
       </div>
