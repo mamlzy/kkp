@@ -15,19 +15,21 @@ COPY . .
 # Build the application
 RUN pnpm build
 
-# Production stage
-FROM nginx:alpine
+# Production stage with Caddy
+FROM caddy:alpine
 
-# Copy built assets
-COPY --from=build /app/dist /usr/share/nginx/html
+# Copy built assets from build stage
+COPY --from=build /app/dist /srv
 
-# Copy nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Create Caddyfile for serving on port 5173
+RUN printf ':5173 {\n\
+    root * /srv\n\
+    file_server\n\
+    try_files {path} /index.html\n\
+}\n' > /etc/caddy/Caddyfile
 
 # Health check for Coolify
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:5173/ || exit 1
 
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 5173

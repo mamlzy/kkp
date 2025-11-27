@@ -24,6 +24,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     restart: unless-stopped
+    ports:
+      - '8000:8000'
     environment:
       - DB_HOST=db
       - DB_PORT=3306
@@ -41,6 +43,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     restart: unless-stopped
+    ports:
+      - '5173:5173'
 
 volumes:
   mysql_data:
