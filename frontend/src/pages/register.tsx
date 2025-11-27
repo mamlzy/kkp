@@ -326,178 +326,180 @@ export function Register() {
   return (
     <div className='space-y-8'>
       {/* Page Header */}
-      <div className='flex items-center justify-between animate-fade-in'>
+      <div className='flex md:items-center gap-4 flex-col md:flex-row justify-between animate-fade-in'>
         <div>
           <h1 className='text-3xl font-bold tracking-tight'>Manajemen User</h1>
           <p className='text-muted-foreground mt-1'>
             Kelola pengguna sistem prediksi siswa berprestasi
           </p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <UserPlus className='h-4 w-4 mr-2' />
-              Tambah User
-            </Button>
-          </DialogTrigger>
-          <DialogContent className='sm:max-w-md'>
-            <DialogHeader>
-              <DialogTitle>Tambah User Baru</DialogTitle>
-              <DialogDescription>
-                Buat akun pengguna baru untuk mengakses sistem
-              </DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleSubmit(onSubmit)} className='space-y-4 py-4'>
-              <div className='space-y-2'>
-                <Label htmlFor='username'>Username</Label>
-                <Input
-                  id='username'
-                  placeholder='Masukkan username'
-                  {...register('username')}
-                />
-                {errors.username && (
-                  <p className='text-sm text-destructive'>
-                    {errors.username.message}
-                  </p>
-                )}
-              </div>
 
-              <div className='space-y-2'>
-                <Label htmlFor='name'>Nama Lengkap</Label>
-                <Input
-                  id='name'
-                  placeholder='Masukkan nama lengkap'
-                  {...register('name')}
-                />
-                {errors.name && (
-                  <p className='text-sm text-destructive'>
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>
-
-              <div className='space-y-2'>
-                <Label htmlFor='role'>Role</Label>
-                <Watch
-                  control={control}
-                  names={['role']}
-                  render={([selectedRole]) => (
-                    <Select
-                      value={selectedRole}
-                      onValueChange={(value: UserRole) =>
-                        setValue('role', value)
-                      }
+        <div>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <UserPlus className='h-4 w-4 mr-2' />
+                Tambah User
+              </Button>
+            </DialogTrigger>
+            <DialogContent className='sm:max-w-md'>
+              <DialogHeader>
+                <DialogTitle>Tambah User Baru</DialogTitle>
+                <DialogDescription>
+                  Buat akun pengguna baru untuk mengakses sistem
+                </DialogDescription>
+              </DialogHeader>
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className='space-y-4 py-4'
+              >
+                <div className='space-y-2'>
+                  <Label htmlFor='username'>Username</Label>
+                  <Input
+                    id='username'
+                    placeholder='Masukkan username'
+                    {...register('username')}
+                  />
+                  {errors.username && (
+                    <p className='text-sm text-destructive'>
+                      {errors.username.message}
+                    </p>
+                  )}
+                </div>
+                <div className='space-y-2'>
+                  <Label htmlFor='name'>Nama Lengkap</Label>
+                  <Input
+                    id='name'
+                    placeholder='Masukkan nama lengkap'
+                    {...register('name')}
+                  />
+                  {errors.name && (
+                    <p className='text-sm text-destructive'>
+                      {errors.name.message}
+                    </p>
+                  )}
+                </div>
+                <div className='space-y-2'>
+                  <Label htmlFor='role'>Role</Label>
+                  <Watch
+                    control={control}
+                    names={['role']}
+                    render={([selectedRole]) => (
+                      <Select
+                        value={selectedRole}
+                        onValueChange={(value: UserRole) =>
+                          setValue('role', value)
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder='Pilih role' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value={UserRole.USER}>
+                            <div className='flex items-center gap-2'>
+                              <User className='h-4 w-4' />
+                              User
+                            </div>
+                          </SelectItem>
+                          <SelectItem value={UserRole.ADMIN}>
+                            <div className='flex items-center gap-2'>
+                              <Shield className='h-4 w-4' />
+                              Admin
+                            </div>
+                          </SelectItem>
+                          <SelectItem value={UserRole.SUPER_ADMIN}>
+                            <div className='flex items-center gap-2'>
+                              <ShieldAlert className='h-4 w-4' />
+                              Super Admin
+                            </div>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.role && (
+                    <p className='text-sm text-destructive'>
+                      {errors.role.message}
+                    </p>
+                  )}
+                </div>
+                <div className='space-y-2'>
+                  <Label htmlFor='password'>Password</Label>
+                  <div className='relative'>
+                    <Input
+                      id='password'
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder='Masukkan password'
+                      className='pr-10'
+                      {...register('password')}
+                    />
+                    <button
+                      type='button'
+                      onClick={() => setShowPassword(!showPassword)}
+                      className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
                     >
-                      <SelectTrigger>
-                        <SelectValue placeholder='Pilih role' />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value={UserRole.USER}>
-                          <div className='flex items-center gap-2'>
-                            <User className='h-4 w-4' />
-                            User
-                          </div>
-                        </SelectItem>
-                        <SelectItem value={UserRole.ADMIN}>
-                          <div className='flex items-center gap-2'>
-                            <Shield className='h-4 w-4' />
-                            Admin
-                          </div>
-                        </SelectItem>
-                        <SelectItem value={UserRole.SUPER_ADMIN}>
-                          <div className='flex items-center gap-2'>
-                            <ShieldAlert className='h-4 w-4' />
-                            Super Admin
-                          </div>
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
+                      {showPassword ? (
+                        <EyeOff className='h-4 w-4' />
+                      ) : (
+                        <Eye className='h-4 w-4' />
+                      )}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p className='text-sm text-destructive'>
+                      {errors.password.message}
+                    </p>
                   )}
-                />
-
-                {errors.role && (
-                  <p className='text-sm text-destructive'>
-                    {errors.role.message}
-                  </p>
-                )}
-              </div>
-
-              <div className='space-y-2'>
-                <Label htmlFor='password'>Password</Label>
-                <div className='relative'>
-                  <Input
-                    id='password'
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder='Masukkan password'
-                    className='pr-10'
-                    {...register('password')}
-                  />
-                  <button
-                    type='button'
-                    onClick={() => setShowPassword(!showPassword)}
-                    className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
-                  >
-                    {showPassword ? (
-                      <EyeOff className='h-4 w-4' />
-                    ) : (
-                      <Eye className='h-4 w-4' />
-                    )}
-                  </button>
                 </div>
-                {errors.password && (
-                  <p className='text-sm text-destructive'>
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
-
-              <div className='space-y-2'>
-                <Label htmlFor='confirmPassword'>Konfirmasi Password</Label>
-                <div className='relative'>
-                  <Input
-                    id='confirmPassword'
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder='Ulangi password'
-                    className='pr-10'
-                    {...register('confirmPassword')}
-                  />
-                  <button
-                    type='button'
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className='h-4 w-4' />
-                    ) : (
-                      <Eye className='h-4 w-4' />
-                    )}
-                  </button>
-                </div>
-                {errors.confirmPassword && (
-                  <p className='text-sm text-destructive'>
-                    {errors.confirmPassword.message}
-                  </p>
-                )}
-              </div>
-
-              <DialogFooter className='pt-4'>
-                <Button
-                  type='button'
-                  variant='outline'
-                  onClick={() => setIsDialogOpen(false)}
-                >
-                  Batal
-                </Button>
-                <Button type='submit' disabled={registerMutation.isPending}>
-                  {registerMutation.isPending && (
-                    <Loader2 className='h-4 w-4 mr-2 animate-spin' />
+                <div className='space-y-2'>
+                  <Label htmlFor='confirmPassword'>Konfirmasi Password</Label>
+                  <div className='relative'>
+                    <Input
+                      id='confirmPassword'
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      placeholder='Ulangi password'
+                      className='pr-10'
+                      {...register('confirmPassword')}
+                    />
+                    <button
+                      type='button'
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className='h-4 w-4' />
+                      ) : (
+                        <Eye className='h-4 w-4' />
+                      )}
+                    </button>
+                  </div>
+                  {errors.confirmPassword && (
+                    <p className='text-sm text-destructive'>
+                      {errors.confirmPassword.message}
+                    </p>
                   )}
-                  Simpan
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
+                </div>
+                <DialogFooter className='pt-4'>
+                  <Button
+                    type='button'
+                    variant='outline'
+                    onClick={() => setIsDialogOpen(false)}
+                  >
+                    Batal
+                  </Button>
+                  <Button type='submit' disabled={registerMutation.isPending}>
+                    {registerMutation.isPending && (
+                      <Loader2 className='h-4 w-4 mr-2 animate-spin' />
+                    )}
+                    Simpan
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       {/* Users Table */}
@@ -511,7 +513,7 @@ export function Register() {
             Semua pengguna yang terdaftar dalam sistem
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className='p-6'>
           {usersLoading ? (
             <div className='flex items-center justify-center py-8'>
               <Loader2 className='h-8 w-8 animate-spin text-primary' />

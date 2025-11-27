@@ -353,74 +353,160 @@ export function Model() {
               <Loader2 className='h-8 w-8 animate-spin text-primary' />
             </div>
           ) : models && models.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nama Model</TableHead>
-                  <TableHead>Akurasi</TableHead>
-                  <TableHead>Dataset</TableHead>
-                  <TableHead>Tanggal Dibuat</TableHead>
-                  <TableHead className='text-right'>Aksi</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+            <>
+              {/* Desktop Table View */}
+              <div className='hidden md:block'>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Nama Model</TableHead>
+                      <TableHead>Akurasi</TableHead>
+                      <TableHead>Dataset</TableHead>
+                      <TableHead>Tanggal Dibuat</TableHead>
+                      <TableHead className='text-right'>Aksi</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {models.map((model) => (
+                      <TableRow key={model.id}>
+                        <TableCell className='font-medium'>
+                          {model.name}
+                        </TableCell>
+                        <TableCell>
+                          <span className='inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700'>
+                            {formatAccuracy(model.accuracy)}
+                          </span>
+                        </TableCell>
+                        <TableCell className='text-muted-foreground'>
+                          {model.dataset_path || '-'}
+                        </TableCell>
+                        <TableCell className='text-muted-foreground'>
+                          {formatDate(model.created_at)}
+                        </TableCell>
+                        <TableCell className='text-right'>
+                          <div className='flex items-center justify-end gap-2'>
+                            <Button
+                              variant='ghost'
+                              size='icon'
+                              onClick={() => handleEditModel(model)}
+                              disabled={
+                                updateMutation.isPending || !canCreateModel
+                              }
+                              title={
+                                !canCreateModel
+                                  ? 'Anda tidak memiliki akses untuk mengedit model'
+                                  : 'Edit nama model'
+                              }
+                              className='group'
+                            >
+                              {!canCreateModel ? (
+                                <Lock className='h-4 w-4 text-muted-foreground' />
+                              ) : (
+                                <Pencil className='h-4 w-4 text-primary group-hover:text-primary-foreground' />
+                              )}
+                            </Button>
+                            <Button
+                              variant='ghost'
+                              size='icon'
+                              onClick={() => handleDeleteModel(model)}
+                              disabled={
+                                deleteMutation.isPending || !canDeleteModel
+                              }
+                              title={
+                                !canDeleteModel
+                                  ? 'Anda tidak memiliki akses untuk menghapus model'
+                                  : 'Hapus model'
+                              }
+                            >
+                              {!canDeleteModel ? (
+                                <Lock className='h-4 w-4 text-muted-foreground' />
+                              ) : (
+                                <Trash2 className='h-4 w-4 text-destructive' />
+                              )}
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Mobile Card View */}
+              <div className='md:hidden space-y-4'>
                 {models.map((model) => (
-                  <TableRow key={model.id}>
-                    <TableCell className='font-medium'>{model.name}</TableCell>
-                    <TableCell>
-                      <span className='inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700'>
-                        {formatAccuracy(model.accuracy)}
-                      </span>
-                    </TableCell>
-                    <TableCell className='text-muted-foreground'>
-                      {model.dataset_path || '-'}
-                    </TableCell>
-                    <TableCell className='text-muted-foreground'>
-                      {formatDate(model.created_at)}
-                    </TableCell>
-                    <TableCell className='text-right'>
-                      <div className='flex items-center justify-end gap-2'>
+                  <Card key={model.id} className='border shadow-sm'>
+                    <CardContent className='p-4 space-y-3'>
+                      <div className='flex items-start justify-between gap-2'>
+                        <div className='flex-1 min-w-0'>
+                          <h3 className='font-semibold text-base truncate'>
+                            {model.name}
+                          </h3>
+                          <p className='text-xs text-muted-foreground mt-1'>
+                            {formatDate(model.created_at)}
+                          </p>
+                        </div>
+                        <span className='inline-flex items-center rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700 whitespace-nowrap'>
+                          {formatAccuracy(model.accuracy)}
+                        </span>
+                      </div>
+
+                      <div className='space-y-1.5'>
+                        <div className='flex items-center gap-2 text-sm'>
+                          <span className='text-muted-foreground text-xs'>
+                            Dataset:
+                          </span>
+                          <span className='text-xs truncate'>
+                            {model.dataset_path || '-'}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className='flex items-center gap-2 pt-2 border-t'>
                         <Button
-                          variant='ghost'
-                          size='icon'
+                          variant='outline'
+                          size='sm'
                           onClick={() => handleEditModel(model)}
                           disabled={updateMutation.isPending || !canCreateModel}
-                          title={
-                            !canCreateModel
-                              ? 'Anda tidak memiliki akses untuk mengedit model'
-                              : 'Edit nama model'
-                          }
-                          className='group'
+                          className='flex-1'
                         >
                           {!canCreateModel ? (
-                            <Lock className='h-4 w-4 text-muted-foreground' />
+                            <>
+                              <Lock className='h-3.5 w-3.5 mr-1.5' />
+                              Edit
+                            </>
                           ) : (
-                            <Pencil className='h-4 w-4 text-primary group-hover:text-primary-foreground' />
+                            <>
+                              <Pencil className='h-3.5 w-3.5 mr-1.5' />
+                              Edit
+                            </>
                           )}
                         </Button>
                         <Button
-                          variant='ghost'
-                          size='icon'
+                          variant='outline'
+                          size='sm'
                           onClick={() => handleDeleteModel(model)}
                           disabled={deleteMutation.isPending || !canDeleteModel}
-                          title={
-                            !canDeleteModel
-                              ? 'Anda tidak memiliki akses untuk menghapus model'
-                              : 'Hapus model'
-                          }
+                          className='flex-1 text-destructive hover:text-destructive'
                         >
                           {!canDeleteModel ? (
-                            <Lock className='h-4 w-4 text-muted-foreground' />
+                            <>
+                              <Lock className='h-3.5 w-3.5 mr-1.5' />
+                              Hapus
+                            </>
                           ) : (
-                            <Trash2 className='h-4 w-4 text-destructive' />
+                            <>
+                              <Trash2 className='h-3.5 w-3.5 mr-1.5' />
+                              Hapus
+                            </>
                           )}
                         </Button>
                       </div>
-                    </TableCell>
-                  </TableRow>
+                    </CardContent>
+                  </Card>
                 ))}
-              </TableBody>
-            </Table>
+              </div>
+            </>
           ) : (
             <div className='flex flex-col items-center justify-center py-12 text-center'>
               <div className='rounded-full bg-muted p-4 mb-4'>
