@@ -57,7 +57,7 @@ INSERT IGNORE INTO users (id, username, name, password, role) VALUES (
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     'superadmin',
     'Super Admin',
-    '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/X4.qH9sIeAPrLZoHe',
+    '$2b$12$42LOkp/mHbDVANvxbLMF4eiaIeEhC2007ut9tuVvEEmfsi4diyNo2',
     'SUPER_ADMIN'
 );
 

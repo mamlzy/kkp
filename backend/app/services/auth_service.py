@@ -17,7 +17,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.services.db_service import Base, get_db, SessionLocal
 
 # JWT Configuration
-SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production-kkp-2024")
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "1440"))  # 24 hours default
 
@@ -223,7 +223,7 @@ def seed_super_admin():
                 db=db,
                 username="superadmin",
                 name="Super Admin",
-                password="rahasia",
+                password=os.getenv("SUPER_ADMIN_PASSWORD"),
                 role=UserRole.SUPER_ADMIN
             )
             print("Super admin user created successfully!")

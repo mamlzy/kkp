@@ -109,8 +109,10 @@ pip install -r requirements.txt
 # DB_HOST=localhost
 # DB_PORT=3306
 # DB_USER=root
-# DB_PASSWORD=your_password
+# DB_PASSWORD=your_db_password
 # DB_NAME=kkp
+# SUPER_ADMIN_PASSWORD=your_superadmin_password
+# JWT_SECRET_KEY=you_jwrt_secret
 
 # Jalankan server
 uvicorn app.main:app --reload --port 8000
