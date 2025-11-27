@@ -135,7 +135,7 @@ export function Model() {
         <div>
           <h1 className='text-3xl font-bold tracking-tight'>Manajemen Model</h1>
           <p className='text-muted-foreground mt-1'>
-            Kelola model CART untuk prediksi siswa berprestasi
+            Kelola model untuk prediksi siswa berprestasi
           </p>
         </div>
         <div className='flex gap-2'>
@@ -167,7 +167,7 @@ export function Model() {
               <DialogHeader>
                 <DialogTitle>Buat Model Baru</DialogTitle>
                 <DialogDescription>
-                  Upload file CSV dataset untuk melatih model CART baru
+                  Upload file CSV dataset untuk melatih model baru
                 </DialogDescription>
               </DialogHeader>
               <div className='space-y-4 py-4'>
@@ -238,7 +238,7 @@ export function Model() {
       <Card className='animate-fade-in border-none shadow-lg'>
         <CardHeader>
           <CardTitle>Daftar Model</CardTitle>
-          <CardDescription>Semua model CART yang telah dilatih</CardDescription>
+          <CardDescription>Semua model yang telah dilatih</CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -251,8 +251,6 @@ export function Model() {
                 <TableRow>
                   <TableHead>Nama Model</TableHead>
                   <TableHead>Akurasi</TableHead>
-                  <TableHead>Precision</TableHead>
-                  <TableHead>Recall</TableHead>
                   <TableHead>Dataset</TableHead>
                   <TableHead>Tanggal Dibuat</TableHead>
                   <TableHead className='text-right'>Aksi</TableHead>
@@ -266,16 +264,6 @@ export function Model() {
                       <span className='inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700'>
                         {formatAccuracy(model.accuracy)}
                       </span>
-                    </TableCell>
-                    <TableCell>
-                      {model.metrics?.precision
-                        ? `${(model.metrics.precision * 100).toFixed(1)}%`
-                        : '-'}
-                    </TableCell>
-                    <TableCell>
-                      {model.metrics?.recall
-                        ? `${(model.metrics.recall * 100).toFixed(1)}%`
-                        : '-'}
                     </TableCell>
                     <TableCell className='text-muted-foreground'>
                       {model.dataset_path || '-'}

@@ -1,7 +1,3 @@
-/**
- * Type definitions for the CART Student Achievement Prediction App
- */
-
 // User roles
 export const UserRole = {
   SUPER_ADMIN: 'SUPER_ADMIN',

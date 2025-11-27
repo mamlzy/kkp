@@ -76,16 +76,16 @@ export function Login() {
         <CardHeader className='space-y-4 text-center pb-2'>
           {/* Logo */}
           <div className='flex justify-center'>
-            <div className='flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-500 text-white shadow-lg shadow-indigo-500/30'>
+            <div className='flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-cyan-600 text-white font-bold text-lg shadow-lg shadow-primary/30 '>
               <GraduationCap className='h-8 w-8' />
             </div>
           </div>
           <div>
             <CardTitle className='text-2xl font-bold text-white'>
-              CART Prediction
+              SIPRESTA
             </CardTitle>
             <CardDescription className='text-slate-400 mt-2'>
-              Masuk ke sistem prediksi siswa berprestasi
+              Sistem Prediksi Prestasi Siswa
             </CardDescription>
           </div>
         </CardHeader>
@@ -142,7 +142,7 @@ export function Login() {
 
             <Button
               type='submit'
-              className='w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 hover:from-indigo-600 hover:via-purple-600 hover:to-cyan-600 text-white font-semibold shadow-lg shadow-indigo-500/25 transition-all duration-300'
+              className='w-full bg-gradient-to-br from-primary to-cyan-600 text-white text-lg  font-semibold shadow-lg shadow-indigo-500/25 transition-all duration-300'
               disabled={isLoading}
             >
               {isLoading ? (
@@ -156,9 +156,6 @@ export function Login() {
 
           <div className='mt-8 pt-6 border-t border-slate-700/50 text-center'>
             <p className='text-sm text-slate-500'>SMP PGRI Tambun Selatan</p>
-            <p className='text-xs text-slate-600 mt-1'>
-              Metode CART untuk Menentukan Siswa Berprestasi
-            </p>
           </div>
         </CardContent>
       </Card>

@@ -250,7 +250,7 @@ export function Prediction() {
       <div className='animate-fade-in'>
         <h1 className='text-3xl font-bold tracking-tight'>Prediksi Siswa</h1>
         <p className='text-muted-foreground mt-1'>
-          Prediksi status prestasi siswa menggunakan model CART
+          Prediksi status prestasi siswa menggunakan model
         </p>
       </div>
 
@@ -259,7 +259,7 @@ export function Prediction() {
         <CardHeader>
           <CardTitle>Pilih Model</CardTitle>
           <CardDescription>
-            Pilih model CART yang akan digunakan untuk prediksi
+            Pilih model yang akan digunakan untuk prediksi
           </CardDescription>
         </CardHeader>
         <CardContent>
