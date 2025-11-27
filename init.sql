@@ -50,14 +50,3 @@ CREATE INDEX idx_models_created_at ON models(created_at);
 CREATE INDEX idx_predictions_model_id ON predictions(model_id);
 CREATE INDEX idx_predictions_created_at ON predictions(created_at);
 CREATE INDEX idx_users_username ON users(username);
-
--- Seed initial SUPER_ADMIN user
--- Password: rahasia (hashed with bcrypt)
-INSERT IGNORE INTO users (id, username, name, password, role) VALUES (
-    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    'superadmin',
-    'Super Admin',
-    '$2b$12$42LOkp/mHbDVANvxbLMF4eiaIeEhC2007ut9tuVvEEmfsi4diyNo2',
-    'SUPER_ADMIN'
-);
-
