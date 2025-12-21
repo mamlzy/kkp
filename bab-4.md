@@ -92,91 +92,7 @@ _Use case diagram_ yang digunakan pada implementasi sistem prediksi siswa berpre
 
 **Gambar 4.1 Use Case Diagram**
 
-```plantuml
-@startuml
-left to right direction
-skinparam packageStyle rectangle
-skinparam usecase {
-    BackgroundColor White
-    BorderColor Black
-    ArrowColor Black
-}
-
-actor "Super Admin" as SA
-actor "Admin" as AD
-actor "User" as US
-
-rectangle "Sistem Prediksi Siswa Berprestasi" {
-    ' Authentication
-    usecase "Login" as UC1
-    usecase "Logout" as UC2
-    usecase "Edit Profil" as UC3
-    
-    ' Dashboard
-    usecase "Melihat Dashboard" as UC4
-    
-    ' Model Management
-    usecase "Melihat Daftar Model" as UC5
-    usecase "Membuat Model CART" as UC6
-    usecase "Menghapus Model" as UC7
-    usecase "Download Template CSV" as UC8
-    
-    ' Prediction
-    usecase "Melakukan Prediksi Tunggal" as UC9
-    usecase "Melakukan Prediksi Batch" as UC10
-    usecase "Download Hasil Prediksi" as UC11
-    
-    ' User Management
-    usecase "Melihat Daftar User" as UC12
-    usecase "Menambah User" as UC13
-    usecase "Mengedit User" as UC14
-    usecase "Menghapus User" as UC15
-}
-
-' User connections (basic access)
-US --> UC1
-US --> UC2
-US --> UC3
-US --> UC4
-US --> UC5
-US --> UC8
-US --> UC9
-US --> UC10
-US --> UC11
-
-' Admin extends User capabilities
-AD --> UC1
-AD --> UC2
-AD --> UC3
-AD --> UC4
-AD --> UC5
-AD --> UC6
-AD --> UC7
-AD --> UC8
-AD --> UC9
-AD --> UC10
-AD --> UC11
-
-' Super Admin has all access
-SA --> UC1
-SA --> UC2
-SA --> UC3
-SA --> UC4
-SA --> UC5
-SA --> UC6
-SA --> UC7
-SA --> UC8
-SA --> UC9
-SA --> UC10
-SA --> UC11
-SA --> UC12
-SA --> UC13
-SA --> UC14
-SA --> UC15
-
-@enduml
-```
-
+![Judul gambar](./assets/4-1.png)
 Sumber: Dokumen Pribadi
 
 Berdasarkan Gambar 4.1, dapat dilihat bahwa sistem memiliki tiga aktor utama dengan hak akses berbeda:
@@ -654,207 +570,7 @@ _Class diagram_ digunakan untuk menggambarkan rancangan berupa entitas yang digu
 
 **Gambar 4.2 Class Diagram**
 
-```plantuml
-@startuml
-skinparam classAttributeIconSize 0
-skinparam class {
-    BackgroundColor White
-    BorderColor Black
-    ArrowColor Black
-}
-
-' Enums
-enum UserRole {
-    SUPER_ADMIN
-    ADMIN
-    USER
-}
-
-' Database Models (Backend)
-class UserDB {
-    - id: String
-    - username: String
-    - name: String
-    - password: String
-    - role: UserRole
-    - created_at: DateTime
-    - updated_at: DateTime
-}
-
-class ModelDB {
-    - id: Integer
-    - name: String
-    - file_path: String
-    - accuracy: Float
-    - metrics: Text
-    - dataset_path: String
-    - created_at: DateTime
-}
-
-class DatasetDB {
-    - id: Integer
-    - name: String
-    - file_path: String
-    - row_count: Integer
-    - uploaded_at: DateTime
-}
-
-class PredictionDB {
-    - id: Integer
-    - model_id: Integer
-    - input_data: Text
-    - prediction: String
-    - probability: Text
-    - created_at: DateTime
-}
-
-' API Models (Pydantic)
-class StudentFeatures {
-    + pai: Float
-    + pendidikan_pancasila: Float
-    + bahasa_indonesia: Float
-    + matematika: Float
-    + ipa: Float
-    + ips: Float
-    + bahasa_inggris: Float
-    + penjas: Float
-    + tik: Float
-    + sbk: Float
-    + prakarya: Float
-    + bahasa_sunda: Float
-    + btq: Float
-    + absen: Float
-}
-
-class PredictRequest {
-    + model_id: Integer
-    + nama: String
-    + features: StudentFeatures
-}
-
-class PredictResponse {
-    + prediction: String
-    + probability: Dict
-    + nama: String
-}
-
-class BatchPredictResponse {
-    + results: List<BatchPredictResult>
-    + total_count: Integer
-    + berprestasi_count: Integer
-    + tidak_berprestasi_count: Integer
-}
-
-class DashboardSummary {
-    + total_models: Integer
-    + total_datasets: Integer
-    + latest_model_accuracy: Float
-    + status_distribution: Dict
-    + prediction_stats: Dict
-}
-
-' Services
-class AuthService {
-    + verify_password(plain, hashed): Boolean
-    + get_password_hash(password): String
-    + create_access_token(data, expires): String
-    + decode_token(token): Dict
-    + get_user_by_username(db, username): UserDB
-    + get_user_by_id(db, user_id): UserDB
-    + create_user(db, username, name, password, role): UserDB
-    + authenticate_user(db, username, password): UserDB
-    + get_all_users(db): List<UserDB>
-    + update_user(db, user_id, ...): UserDB
-    + delete_user(db, user_id): Boolean
-    + get_current_user(credentials, db): UserDB
-}
-
-class MLService {
-    - models_dir: String
-    - _loaded_models: Dict
-    + validate_csv_columns(df, require_status): Tuple
-    + preprocess_data(df): DataFrame
-    + train_model(df, model_name, target_column): Dict
-    + load_model(model_id, file_path): Any
-    + predict(model_id, file_path, features): Dict
-    + predict_batch(model_id, file_path, df): List<Dict>
-    + get_feature_importance(model_id, file_path): Dict
-}
-
-class DBService {
-    + init_db(): void
-    + get_db(): Session
-    + create_model(db, ...): ModelDB
-    + get_model(db, model_id): ModelDB
-    + get_all_models(db): List<ModelDB>
-    + delete_model(db, model_id): Boolean
-    + get_latest_model(db): ModelDB
-    + create_dataset(db, ...): DatasetDB
-    + get_dataset(db, dataset_id): DatasetDB
-    + get_all_datasets(db): List<DatasetDB>
-    + delete_dataset(db, dataset_id): Boolean
-    + create_prediction(db, ...): PredictionDB
-    + get_prediction_stats(db): Dict
-    + get_status_distribution(db): Dict
-}
-
-' API Routes
-class AuthRoutes {
-    + login(request): TokenResponse
-    + register(request): UserResponse
-    + get_me(): UserResponse
-    + list_users(): List<UserResponse>
-    + verify_token(): UserResponse
-    + update_my_profile(request): UserResponse
-    + update_user_by_admin(user_id, request): UserResponse
-    + delete_user_by_admin(user_id): MessageResponse
-}
-
-class ModelRoutes {
-    + train_model(file, name, target_column): ModelTrainResponse
-    + list_models(): List<ModelMeta>
-    + get_model_detail(model_id): ModelMeta
-    + delete_model_endpoint(model_id): MessageResponse
-    + download_csv_template(): StreamingResponse
-    + get_dashboard_summary(): DashboardSummary
-}
-
-class PredictRoutes {
-    + predict_single(request): PredictResponse
-    + predict_batch(file, model_id): BatchPredictResponse
-    + predict_batch_download(file, model_id): StreamingResponse
-}
-
-class DatasetRoutes {
-    + upload_dataset(file, name): DatasetMeta
-    + list_datasets(): List<DatasetMeta>
-    + get_dataset_detail(dataset_id): DatasetMeta
-    + delete_dataset_endpoint(dataset_id): MessageResponse
-    + preview_dataset(dataset_id, limit): Dict
-}
-
-' Relationships
-UserDB --> UserRole
-PredictionDB --> ModelDB : model_id
-
-AuthService --> UserDB : manages
-MLService --> ModelDB : uses
-DBService --> ModelDB : manages
-DBService --> DatasetDB : manages
-DBService --> PredictionDB : manages
-
-AuthRoutes --> AuthService : uses
-ModelRoutes --> MLService : uses
-ModelRoutes --> DBService : uses
-PredictRoutes --> MLService : uses
-PredictRoutes --> DBService : uses
-DatasetRoutes --> DBService : uses
-
-PredictRequest --> StudentFeatures : contains
-BatchPredictResponse --> PredictResponse : contains
-
-@enduml
-```
+![Judul gambar](./assets/4-2.png)
 
 Sumber: Dokumen Pribadi
 
@@ -874,31 +590,7 @@ _Activity diagram_ ini merupakan langkah awal untuk pengguna dapat mengelola sis
 
 **Gambar 4.3 Activity Diagram Login**
 
-```plantuml
-@startuml
-start
-:Pengguna membuka halaman Login;
-:Sistem menampilkan form Login;
-
-:Pengguna mengisi Username;
-:Pengguna mengisi Password;
-:Pengguna klik tombol "Masuk";
-
-:Sistem memvalidasi kredensial;
-
-if (Kredensial valid?) then (Ya)
-    :Sistem membuat token JWT;
-    :Sistem menyimpan token ke localStorage;
-    :Sistem menampilkan notifikasi "Login berhasil!";
-    :Sistem redirect ke halaman Dashboard;
-else (Tidak)
-    :Sistem menampilkan notifikasi "Username atau password salah";
-    :Kembali ke form Login;
-endif
-
-stop
-@enduml
-```
+![Judul gambar](./assets/4-3.png)
 
 Sumber: Dokumen Pribadi
 
@@ -908,17 +600,7 @@ _Activity diagram_ ini menggambarkan proses pengguna untuk keluar dari sistem. _
 
 **Gambar 4.4 Activity Diagram Logout**
 
-```plantuml
-@startuml
-start
-:Pengguna klik tombol profil di header;
-:Sistem menampilkan dropdown menu;
-:Pengguna klik menu "Keluar";
-:Sistem menghapus token dari localStorage;
-:Sistem redirect ke halaman Login;
-stop
-@enduml
-```
+![Judul gambar](./assets/4-4.png)
 
 Sumber: Dokumen Pribadi
 
@@ -928,44 +610,7 @@ _Activity diagram_ ini menggambarkan proses pembuatan model CART baru dengan men
 
 **Gambar 4.5 Activity Diagram Membuat Model CART**
 
-```plantuml
-@startuml
-start
-:Admin/Super Admin klik menu "Model";
-:Sistem menampilkan halaman Manajemen Model;
-:Pengguna klik tombol "Buat Model";
-:Sistem menampilkan dialog Buat Model Baru;
-
-:Pengguna mengisi nama model (opsional);
-:Pengguna memilih file CSV dataset;
-:Pengguna klik tombol "Latih Model";
-
-:Sistem memvalidasi format file;
-
-if (Format file valid?) then (Ya)
-    :Sistem membaca dan parsing file CSV;
-    :Sistem memvalidasi kolom yang diperlukan;
-    
-    if (Kolom lengkap?) then (Ya)
-        :Sistem melakukan preprocessing data;
-        :Sistem membagi data training dan testing (80:20);
-        :Sistem melatih model Decision Tree (CART);
-        :Sistem menghitung metrik evaluasi;
-        :Sistem menyimpan model ke file .joblib;
-        :Sistem menyimpan metadata ke database;
-        :Sistem menampilkan notifikasi sukses;
-        :Sistem menutup dialog;
-        :Sistem memperbarui daftar model;
-    else (Tidak)
-        :Sistem menampilkan error "Kolom tidak ditemukan";
-    endif
-else (Tidak)
-    :Sistem menampilkan error "File harus berformat CSV";
-endif
-
-stop
-@enduml
-```
+![Judul gambar](./assets/4-5.png)
 
 Sumber: Dokumen Pribadi
 
@@ -975,25 +620,7 @@ _Activity diagram_ ini menggambarkan proses penghapusan model CART dari sistem. 
 
 **Gambar 4.6 Activity Diagram Menghapus Model**
 
-```plantuml
-@startuml
-start
-:Admin/Super Admin berada di halaman Model;
-:Pengguna klik ikon hapus pada baris model;
-:Sistem menampilkan dialog konfirmasi;
-
-if (Pengguna konfirmasi?) then (Ya)
-    :Sistem menghapus file model dari storage;
-    :Sistem menghapus metadata dari database;
-    :Sistem menampilkan notifikasi "Model berhasil dihapus";
-    :Sistem memperbarui daftar model;
-else (Tidak)
-    :Sistem menutup dialog konfirmasi;
-endif
-
-stop
-@enduml
-```
+![Judul gambar](./assets/4-6.png)
 
 Sumber: Dokumen Pribadi
 
@@ -1003,36 +630,7 @@ _Activity diagram_ ini menggambarkan proses prediksi untuk satu siswa dengan men
 
 **Gambar 4.7 Activity Diagram Melakukan Prediksi Tunggal**
 
-```plantuml
-@startuml
-start
-:Pengguna klik menu "Prediksi";
-:Sistem menampilkan halaman Prediksi Siswa;
-
-:Pengguna memilih model yang akan digunakan;
-:Pengguna klik tab "Satu Siswa";
-:Sistem menampilkan form input nilai;
-
-:Pengguna mengisi nama siswa (opsional);
-:Pengguna mengisi nilai 14 mata pelajaran dan absen;
-:Pengguna klik tombol "Prediksi";
-
-:Sistem memvalidasi data input;
-
-if (Data valid?) then (Ya)
-    :Sistem mengirim data ke model CART;
-    :Sistem menghitung probabilitas setiap kelas;
-    :Sistem menyimpan hasil prediksi ke database;
-    :Sistem menampilkan hasil prediksi;
-    :Sistem menampilkan probabilitas berprestasi dan tidak berprestasi;
-    :Sistem menampilkan notifikasi "Prediksi berhasil";
-else (Tidak)
-    :Sistem menampilkan pesan error validasi;
-endif
-
-stop
-@enduml
-```
+![Judul gambar](./assets/4-7.png)
 
 Sumber: Dokumen Pribadi
 
@@ -1042,44 +640,7 @@ _Activity diagram_ ini menggambarkan proses prediksi untuk banyak siswa dengan m
 
 **Gambar 4.8 Activity Diagram Melakukan Prediksi Batch**
 
-```plantuml
-@startuml
-start
-:Pengguna klik menu "Prediksi";
-:Sistem menampilkan halaman Prediksi Siswa;
-
-:Pengguna memilih model yang akan digunakan;
-:Pengguna klik tab "Banyak Siswa";
-:Sistem menampilkan form upload file;
-
-:Pengguna memilih file CSV berisi data siswa;
-:Pengguna klik tombol "Prediksi";
-
-:Sistem memvalidasi format file CSV;
-
-if (Format file valid?) then (Ya)
-    :Sistem membaca dan parsing file CSV;
-    :Sistem memvalidasi kolom yang diperlukan;
-    
-    if (Kolom lengkap?) then (Ya)
-        :Sistem melakukan preprocessing data;
-        :Sistem mengirim data ke model CART;
-        :Sistem menghitung probabilitas untuk setiap siswa;
-        :Sistem menyimpan hasil prediksi ke database;
-        :Sistem menampilkan ringkasan hasil;
-        :Sistem menampilkan tabel hasil prediksi;
-        :Sistem menampilkan notifikasi sukses;
-    else (Tidak)
-        :Sistem menampilkan error "Kolom tidak ditemukan";
-    endif
-else (Tidak)
-    :Sistem menampilkan error "File harus berformat CSV";
-endif
-
-stop
-@enduml
-```
-
+![Judul gambar](./assets/4-8.png)
 Sumber: Dokumen Pribadi
 
 ##### g. Activity Diagram Manajemen User
@@ -1088,60 +649,7 @@ _Activity diagram_ ini menggambarkan proses pengelolaan user oleh Super Admin. _
 
 **Gambar 4.9 Activity Diagram Manajemen User**
 
-```plantuml
-@startuml
-start
-:Super Admin klik menu "Users";
-:Sistem menampilkan halaman Manajemen User;
-:Sistem menampilkan daftar user;
-
-switch (Pilih aksi?)
-case (Tambah User)
-    :Super Admin klik tombol "Tambah User";
-    :Sistem menampilkan dialog Tambah User;
-    :Super Admin mengisi username, nama, role, password;
-    :Super Admin klik tombol "Simpan";
-    :Sistem memvalidasi data input;
-    
-    if (Username sudah ada?) then (Ya)
-        :Sistem menampilkan error "Username sudah digunakan";
-    else (Tidak)
-        :Sistem hash password;
-        :Sistem menyimpan user ke database;
-        :Sistem menampilkan notifikasi sukses;
-        :Sistem menutup dialog;
-    endif
-    
-case (Edit User)
-    :Super Admin klik ikon edit pada baris user;
-    :Sistem menampilkan dialog Edit User;
-    :Super Admin mengubah data yang diperlukan;
-    :Super Admin klik tombol "Simpan";
-    :Sistem memvalidasi data input;
-    :Sistem menyimpan perubahan ke database;
-    :Sistem menampilkan notifikasi sukses;
-    :Sistem menutup dialog;
-    
-case (Hapus User)
-    :Super Admin klik ikon hapus pada baris user;
-    :Sistem menampilkan dialog konfirmasi;
-    
-    if (User adalah superadmin utama?) then (Ya)
-        :Sistem menampilkan error "Tidak dapat dihapus";
-    else (Tidak)
-        if (Konfirmasi?) then (Ya)
-            :Sistem menghapus user dari database;
-            :Sistem menampilkan notifikasi sukses;
-        else (Tidak)
-            :Sistem menutup dialog;
-        endif
-    endif
-endswitch
-
-:Sistem memperbarui daftar user;
-stop
-@enduml
-```
+![Judul gambar](./assets/4-9.png)
 
 Sumber: Dokumen Pribadi
 
@@ -1151,21 +659,7 @@ _Activity diagram_ ini menggambarkan proses melihat dashboard sistem. _Activity 
 
 **Gambar 4.10 Activity Diagram Melihat Dashboard**
 
-```plantuml
-@startuml
-start
-:Pengguna klik menu "Dashboard";
-:Sistem mengambil data summary dari server;
-:Sistem menampilkan kartu Total Model;
-:Sistem menampilkan kartu Total Dataset;
-:Sistem menampilkan kartu Akurasi Model Terbaru;
-:Sistem menampilkan kartu Total Prediksi;
-:Sistem menampilkan grafik Distribusi Status Prediksi;
-:Sistem menampilkan grafik Akurasi Model;
-:Sistem menampilkan informasi tentang sistem;
-stop
-@enduml
-```
+![Judul gambar](./assets/4-10.png)
 
 Sumber: Dokumen Pribadi
 
@@ -1179,48 +673,7 @@ _Sequence diagram_ pada halaman _login_ menjelaskan tentang fungsionalitas pengg
 
 **Gambar 4.11 Sequence Diagram Login**
 
-```plantuml
-@startuml
-actor Pengguna
-participant "Halaman Login" as UI
-participant "AuthContext" as Auth
-participant "API Client" as API
-participant "Auth Routes" as Routes
-participant "Auth Service" as Service
-database "Database" as DB
-
-Pengguna -> UI : Mengisi username dan password
-Pengguna -> UI : Klik tombol "Masuk"
-UI -> Auth : login(credentials)
-Auth -> API : POST /api/v1/auth/login
-
-API -> Routes : login(request)
-Routes -> Service : authenticate_user(db, username, password)
-Service -> DB : Query user by username
-DB --> Service : User data
-Service -> Service : verify_password(password, hash)
-
-alt Kredensial Valid
-    Service --> Routes : User object
-    Routes -> Service : create_access_token(user_data)
-    Service --> Routes : JWT Token
-    Routes --> API : TokenResponse
-    API --> Auth : TokenResponse
-    Auth -> Auth : setStoredToken(token)
-    Auth -> Auth : setUser(user)
-    Auth --> UI : Success
-    UI -> Pengguna : Redirect ke Dashboard
-    UI -> Pengguna : Notifikasi "Login berhasil!"
-else Kredensial Tidak Valid
-    Service --> Routes : None
-    Routes --> API : HTTP 401 Unauthorized
-    API --> Auth : Error
-    Auth --> UI : Error
-    UI -> Pengguna : Notifikasi "Username atau password salah"
-end
-
-@enduml
-```
+![Judul gambar](./assets/4-11.png)
 
 Sumber: Dokumen Pribadi
 
@@ -1230,25 +683,7 @@ _Sequence diagram_ pada halaman _logout_ menjelaskan tentang fungsionalitas peng
 
 **Gambar 4.12 Sequence Diagram Logout**
 
-```plantuml
-@startuml
-actor Pengguna
-participant "Layout" as UI
-participant "AuthContext" as Auth
-participant "Router" as Router
-
-Pengguna -> UI : Klik tombol profil
-UI -> UI : Menampilkan dropdown menu
-Pengguna -> UI : Klik menu "Keluar"
-UI -> Auth : logout()
-Auth -> Auth : clearStoredToken()
-Auth -> Auth : setUser(null)
-Auth --> UI : Success
-UI -> Router : navigate('/login')
-Router -> Pengguna : Redirect ke halaman Login
-
-@enduml
-```
+![Judul gambar](./assets/4-12.png)
 
 Sumber: Dokumen Pribadi
 
@@ -1258,62 +693,7 @@ _Sequence diagram_ pada halaman membuat model menjelaskan tentang fungsionalitas
 
 **Gambar 4.13 Sequence Diagram Membuat Model CART**
 
-```plantuml
-@startuml
-actor "Admin/Super Admin" as Pengguna
-participant "Halaman Model" as UI
-participant "API Client" as API
-participant "Model Routes" as Routes
-participant "ML Service" as ML
-participant "DB Service" as DB
-database "Database" as Database
-database "File Storage" as Storage
-
-Pengguna -> UI : Klik tombol "Buat Model"
-UI -> UI : Menampilkan dialog
-
-Pengguna -> UI : Mengisi nama model
-Pengguna -> UI : Memilih file CSV
-Pengguna -> UI : Klik tombol "Latih Model"
-
-UI -> API : POST /api/v1/models/train (file, name)
-API -> Routes : train_model(file, name, target_column)
-
-Routes -> Routes : Validasi format file CSV
-Routes -> Routes : Membaca file CSV ke DataFrame
-
-Routes -> ML : validate_csv_columns(df, require_status=True)
-ML --> Routes : (is_valid, error_msg)
-
-alt Kolom Valid
-    Routes -> ML : train_model(df, name, target_column)
-    ML -> ML : preprocess_data(df)
-    ML -> ML : Split data training/testing (80:20)
-    ML -> ML : Train DecisionTreeClassifier (CART)
-    ML -> ML : Evaluate model (accuracy, precision, recall, f1)
-    ML -> Storage : Simpan model ke file .joblib
-    Storage --> ML : file_path
-    ML --> Routes : {file_path, accuracy, metrics}
-    
-    Routes -> DB : create_model(db, name, file_path, accuracy, metrics)
-    DB -> Database : INSERT INTO models
-    Database --> DB : Model record
-    DB --> Routes : ModelDB object
-    
-    Routes --> API : ModelTrainResponse
-    API --> UI : Success response
-    UI -> UI : Menutup dialog
-    UI -> UI : Refresh daftar model
-    UI -> Pengguna : Notifikasi "Model berhasil dibuat!"
-else Kolom Tidak Valid
-    ML --> Routes : (False, "Kolom tidak ditemukan: ...")
-    Routes --> API : HTTP 400 Bad Request
-    API --> UI : Error response
-    UI -> Pengguna : Notifikasi error
-end
-
-@enduml
-```
+![Judul gambar](./assets/4-13.png)
 
 Sumber: Dokumen Pribadi
 
@@ -1323,47 +703,7 @@ _Sequence diagram_ pada halaman menghapus model menjelaskan tentang fungsionalit
 
 **Gambar 4.14 Sequence Diagram Menghapus Model**
 
-```plantuml
-@startuml
-actor "Admin/Super Admin" as Pengguna
-participant "Halaman Model" as UI
-participant "API Client" as API
-participant "Model Routes" as Routes
-participant "DB Service" as DB
-database "Database" as Database
-database "File Storage" as Storage
-
-Pengguna -> UI : Klik ikon hapus pada baris model
-UI -> UI : Menampilkan dialog konfirmasi
-
-alt Pengguna Konfirmasi
-    Pengguna -> UI : Klik "OK"
-    UI -> API : DELETE /api/v1/models/{model_id}
-    API -> Routes : delete_model_endpoint(model_id)
-    
-    Routes -> DB : get_model(db, model_id)
-    DB -> Database : SELECT FROM models WHERE id = model_id
-    Database --> DB : Model record
-    DB --> Routes : ModelDB object
-    
-    Routes -> DB : delete_model(db, model_id)
-    DB -> Storage : Hapus file model
-    Storage --> DB : Success
-    DB -> Database : DELETE FROM models WHERE id = model_id
-    Database --> DB : Success
-    DB --> Routes : True
-    
-    Routes --> API : {message: "Model berhasil dihapus"}
-    API --> UI : Success response
-    UI -> UI : Refresh daftar model
-    UI -> Pengguna : Notifikasi "Model berhasil dihapus"
-else Pengguna Batal
-    Pengguna -> UI : Klik "Cancel"
-    UI -> UI : Menutup dialog
-end
-
-@enduml
-```
+![Judul gambar](./assets/4-14.png)
 
 Sumber: Dokumen Pribadi
 
@@ -1373,57 +713,7 @@ _Sequence diagram_ pada halaman prediksi tunggal menjelaskan tentang fungsionali
 
 **Gambar 4.15 Sequence Diagram Melakukan Prediksi Tunggal**
 
-```plantuml
-@startuml
-actor Pengguna
-participant "Halaman Prediksi" as UI
-participant "API Client" as API
-participant "Predict Routes" as Routes
-participant "ML Service" as ML
-participant "DB Service" as DB
-database "Database" as Database
-database "File Storage" as Storage
-
-Pengguna -> UI : Pilih model
-Pengguna -> UI : Klik tab "Satu Siswa"
-Pengguna -> UI : Mengisi nilai 14 mata pelajaran dan absen
-Pengguna -> UI : Klik tombol "Prediksi"
-
-UI -> UI : Validasi data input
-
-alt Data Valid
-    UI -> API : POST /api/v1/predict (request)
-    API -> Routes : predict_single(request)
-    
-    Routes -> DB : get_model(db, model_id)
-    DB -> Database : SELECT FROM models
-    Database --> DB : Model record
-    DB --> Routes : ModelDB object
-    
-    Routes -> ML : predict(model_id, file_path, features)
-    ML -> Storage : Load model dari file .joblib
-    Storage --> ML : Model object
-    ML -> ML : Prepare features in correct order
-    ML -> ML : model.predict(X)
-    ML -> ML : model.predict_proba(X)
-    ML --> Routes : {prediction, probability}
-    
-    Routes -> DB : create_prediction(db, model_id, input_data, prediction, probability)
-    DB -> Database : INSERT INTO predictions
-    Database --> DB : Prediction record
-    DB --> Routes : PredictionDB object
-    
-    Routes --> API : PredictResponse
-    API --> UI : Success response
-    UI -> UI : Menampilkan hasil prediksi
-    UI -> UI : Menampilkan probabilitas
-    UI -> Pengguna : Notifikasi "Prediksi berhasil"
-else Data Tidak Valid
-    UI -> Pengguna : Menampilkan pesan error validasi
-end
-
-@enduml
-```
+![Judul gambar](./assets/4-15.png)
 
 Sumber: Dokumen Pribadi
 
@@ -1433,66 +723,7 @@ _Sequence diagram_ pada halaman prediksi batch menjelaskan tentang fungsionalita
 
 **Gambar 4.16 Sequence Diagram Melakukan Prediksi Batch**
 
-```plantuml
-@startuml
-actor Pengguna
-participant "Halaman Prediksi" as UI
-participant "API Client" as API
-participant "Predict Routes" as Routes
-participant "ML Service" as ML
-participant "DB Service" as DB
-database "Database" as Database
-database "File Storage" as Storage
-
-Pengguna -> UI : Pilih model
-Pengguna -> UI : Klik tab "Banyak Siswa"
-Pengguna -> UI : Memilih file CSV
-Pengguna -> UI : Klik tombol "Prediksi"
-
-UI -> API : POST /api/v1/predict/batch (file, model_id)
-API -> Routes : predict_batch(file, model_id)
-
-Routes -> Routes : Validasi format file CSV
-Routes -> Routes : Membaca file CSV ke DataFrame
-
-Routes -> DB : get_model(db, model_id)
-DB -> Database : SELECT FROM models
-Database --> DB : Model record
-DB --> Routes : ModelDB object
-
-Routes -> ML : validate_csv_columns(df, require_status=False)
-ML --> Routes : (is_valid, error_msg)
-
-alt Kolom Valid
-    Routes -> ML : predict_batch(model_id, file_path, df)
-    ML -> Storage : Load model dari file .joblib
-    Storage --> ML : Model object
-    ML -> ML : Preprocess data
-    ML -> ML : model.predict(X)
-    ML -> ML : model.predict_proba(X)
-    ML --> Routes : List of prediction results
-    
-    loop Untuk setiap hasil prediksi
-        Routes -> DB : create_prediction(db, model_id, ...)
-        DB -> Database : INSERT INTO predictions
-        Database --> DB : Prediction record
-    end
-    
-    Routes -> Routes : Hitung statistik (berprestasi, tidak berprestasi)
-    Routes --> API : BatchPredictResponse
-    API --> UI : Success response
-    UI -> UI : Menampilkan ringkasan hasil
-    UI -> UI : Menampilkan tabel hasil (10 data pertama)
-    UI -> Pengguna : Notifikasi "Prediksi batch berhasil"
-else Kolom Tidak Valid
-    ML --> Routes : (False, "Kolom tidak ditemukan: ...")
-    Routes --> API : HTTP 400 Bad Request
-    API --> UI : Error response
-    UI -> Pengguna : Notifikasi error
-end
-
-@enduml
-```
+![Judul gambar](./assets/4-16.png)
 
 Sumber: Dokumen Pribadi
 
@@ -1502,61 +733,7 @@ _Sequence diagram_ pada halaman menambah user menjelaskan tentang fungsionalitas
 
 **Gambar 4.17 Sequence Diagram Menambah User**
 
-```plantuml
-@startuml
-actor "Super Admin" as Pengguna
-participant "Halaman Users" as UI
-participant "API Client" as API
-participant "Auth Routes" as Routes
-participant "Auth Service" as Service
-database "Database" as Database
-
-Pengguna -> UI : Klik tombol "Tambah User"
-UI -> UI : Menampilkan dialog Tambah User
-
-Pengguna -> UI : Mengisi username
-Pengguna -> UI : Mengisi nama lengkap
-Pengguna -> UI : Memilih role
-Pengguna -> UI : Mengisi password
-Pengguna -> UI : Mengisi konfirmasi password
-Pengguna -> UI : Klik tombol "Simpan"
-
-UI -> UI : Validasi data input
-
-alt Data Valid
-    UI -> API : POST /api/v1/auth/register (request)
-    API -> Routes : register(request)
-    
-    Routes -> Service : get_user_by_username(db, username)
-    Service -> Database : SELECT FROM users WHERE username = ?
-    Database --> Service : Result
-    
-    alt Username Belum Ada
-        Service --> Routes : None
-        Routes -> Service : create_user(db, username, name, password, role)
-        Service -> Service : get_password_hash(password)
-        Service -> Database : INSERT INTO users
-        Database --> Service : User record
-        Service --> Routes : UserDB object
-        
-        Routes --> API : UserResponse
-        API --> UI : Success response
-        UI -> UI : Menutup dialog
-        UI -> UI : Refresh daftar user
-        UI -> Pengguna : Notifikasi "User berhasil dibuat!"
-    else Username Sudah Ada
-        Service --> Routes : UserDB object
-        Routes --> API : HTTP 400 Bad Request
-        API --> UI : Error response
-        UI -> Pengguna : Notifikasi "Username sudah digunakan"
-    end
-else Data Tidak Valid
-    UI -> Pengguna : Menampilkan pesan error validasi
-end
-
-@enduml
-```
-
+![Judul gambar](./assets/4-17.png)
 Sumber: Dokumen Pribadi
 
 ##### h. Sequence Diagram Mengedit User
@@ -1565,64 +742,7 @@ _Sequence diagram_ pada halaman mengedit user menjelaskan tentang fungsionalitas
 
 **Gambar 4.18 Sequence Diagram Mengedit User**
 
-```plantuml
-@startuml
-actor "Super Admin" as Pengguna
-participant "Halaman Users" as UI
-participant "API Client" as API
-participant "Auth Routes" as Routes
-participant "Auth Service" as Service
-database "Database" as Database
-
-Pengguna -> UI : Klik ikon edit pada baris user
-UI -> UI : Menampilkan dialog Edit User dengan data user
-
-Pengguna -> UI : Mengubah data yang diperlukan
-Pengguna -> UI : Klik tombol "Simpan"
-
-UI -> UI : Validasi data input
-
-alt Data Valid
-    UI -> API : PUT /api/v1/auth/users/{user_id} (request)
-    API -> Routes : update_user_by_admin(user_id, request)
-    
-    Routes -> Service : get_user_by_id(db, user_id)
-    Service -> Database : SELECT FROM users WHERE id = ?
-    Database --> Service : User record
-    Service --> Routes : UserDB object
-    
-    alt User Ditemukan
-        Routes -> Routes : Validasi perubahan (superadmin rules)
-        
-        alt Perubahan Valid
-            Routes -> Service : update_user(db, user_id, ...)
-            Service -> Service : Hash password jika diubah
-            Service -> Database : UPDATE users SET ...
-            Database --> Service : Updated record
-            Service --> Routes : UserDB object
-            
-            Routes --> API : UserResponse
-            API --> UI : Success response
-            UI -> UI : Menutup dialog
-            UI -> UI : Refresh daftar user
-            UI -> Pengguna : Notifikasi "User berhasil diperbarui!"
-        else Perubahan Tidak Valid
-            Routes --> API : HTTP 403 Forbidden
-            API --> UI : Error response
-            UI -> Pengguna : Notifikasi error
-        end
-    else User Tidak Ditemukan
-        Routes --> API : HTTP 404 Not Found
-        API --> UI : Error response
-        UI -> Pengguna : Notifikasi "User tidak ditemukan"
-    end
-else Data Tidak Valid
-    UI -> Pengguna : Menampilkan pesan error validasi
-end
-
-@enduml
-```
-
+![Judul gambar](./assets/4-18.png)
 Sumber: Dokumen Pribadi
 
 ##### i. Sequence Diagram Menghapus User
@@ -1631,59 +751,7 @@ _Sequence diagram_ pada halaman menghapus user menjelaskan tentang fungsionalita
 
 **Gambar 4.19 Sequence Diagram Menghapus User**
 
-```plantuml
-@startuml
-actor "Super Admin" as Pengguna
-participant "Halaman Users" as UI
-participant "API Client" as API
-participant "Auth Routes" as Routes
-participant "Auth Service" as Service
-database "Database" as Database
-
-Pengguna -> UI : Klik ikon hapus pada baris user
-UI -> UI : Menampilkan dialog konfirmasi
-
-alt Pengguna Konfirmasi
-    Pengguna -> UI : Klik "OK"
-    UI -> API : DELETE /api/v1/auth/users/{user_id}
-    API -> Routes : delete_user_by_admin(user_id)
-    
-    Routes -> Service : get_user_by_id(db, user_id)
-    Service -> Database : SELECT FROM users WHERE id = ?
-    Database --> Service : User record
-    Service --> Routes : UserDB object
-    
-    alt User Ditemukan
-        Routes -> Routes : Validasi (bukan superadmin, bukan diri sendiri)
-        
-        alt Dapat Dihapus
-            Routes -> Service : delete_user(db, user_id)
-            Service -> Database : DELETE FROM users WHERE id = ?
-            Database --> Service : Success
-            Service --> Routes : True
-            
-            Routes --> API : {message: "User berhasil dihapus"}
-            API --> UI : Success response
-            UI -> UI : Refresh daftar user
-            UI -> Pengguna : Notifikasi "User berhasil dihapus!"
-        else Tidak Dapat Dihapus
-            Routes --> API : HTTP 403 Forbidden
-            API --> UI : Error response
-            UI -> Pengguna : Notifikasi error
-        end
-    else User Tidak Ditemukan
-        Routes --> API : HTTP 404 Not Found
-        API --> UI : Error response
-        UI -> Pengguna : Notifikasi "User tidak ditemukan"
-    end
-else Pengguna Batal
-    Pengguna -> UI : Klik "Cancel"
-    UI -> UI : Menutup dialog
-end
-
-@enduml
-```
-
+![Judul gambar](./assets/4-19.png)
 Sumber: Dokumen Pribadi
 
 ##### j. Sequence Diagram Melihat Dashboard
@@ -1692,69 +760,7 @@ _Sequence diagram_ pada halaman dashboard menjelaskan tentang fungsionalitas unt
 
 **Gambar 4.20 Sequence Diagram Melihat Dashboard**
 
-```plantuml
-@startuml
-actor Pengguna
-participant "Halaman Dashboard" as UI
-participant "API Client" as API
-participant "Model Routes" as Routes
-participant "DB Service" as DB
-database "Database" as Database
-
-Pengguna -> UI : Akses halaman Dashboard
-
-UI -> API : GET /api/v1/dashboard/summary
-API -> Routes : get_dashboard_summary()
-
-Routes -> DB : get_all_models(db)
-DB -> Database : SELECT FROM models
-Database --> DB : List of models
-DB --> Routes : List<ModelDB>
-
-Routes -> DB : get_all_datasets(db)
-DB -> Database : SELECT FROM datasets
-Database --> DB : List of datasets
-DB --> Routes : List<DatasetDB>
-
-Routes -> DB : get_latest_model(db)
-DB -> Database : SELECT FROM models ORDER BY created_at DESC LIMIT 1
-Database --> DB : Latest model
-DB --> Routes : ModelDB
-
-Routes -> DB : get_prediction_stats(db)
-DB -> Database : SELECT COUNT(*) FROM predictions GROUP BY prediction
-Database --> DB : Stats
-DB --> Routes : Dict
-
-Routes -> DB : get_status_distribution(db)
-DB -> Database : SELECT prediction, COUNT(*) FROM predictions GROUP BY prediction
-Database --> DB : Distribution
-DB --> Routes : Dict
-
-Routes --> API : DashboardSummary
-API --> UI : Success response
-
-UI -> UI : Menampilkan kartu Total Model
-UI -> UI : Menampilkan kartu Total Dataset
-UI -> UI : Menampilkan kartu Akurasi Model Terbaru
-UI -> UI : Menampilkan kartu Total Prediksi
-UI -> UI : Menampilkan grafik Distribusi Status
-UI -> UI : Menampilkan grafik Akurasi Model
-
-UI -> API : GET /api/v1/models
-API -> Routes : list_models()
-Routes -> DB : get_all_models(db)
-DB -> Database : SELECT FROM models
-Database --> DB : List of models
-DB --> Routes : List<ModelDB>
-Routes --> API : List<ModelMeta>
-API --> UI : List of models
-
-UI -> UI : Menampilkan grafik perbandingan akurasi
-
-@enduml
-```
-
+![Judul gambar](./assets/4-20.png)
 Sumber: Dokumen Pribadi
 
 ### 4.3.2 Rancangan Layar
