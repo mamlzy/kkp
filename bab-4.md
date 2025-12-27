@@ -92,7 +92,153 @@ _Use case diagram_ yang digunakan pada implementasi sistem prediksi siswa berpre
 
 **Gambar 4.1 Use Case Diagram**
 
-![Judul gambar](./assets/4-1.png)
+<!-- ![Judul gambar](./assets/4-1.png) -->
+```plantuml
+@startuml
+top to bottom direction
+skinparam packageStyle rectangle
+skinparam usecase {
+    BackgroundColor White
+    BorderColor Black
+}
+skinparam rectangle {
+    BackgroundColor #FAFAFA
+    BorderColor Black
+}
+
+' Actors
+actor "Super Admin" as SA
+actor "Admin" as AD
+actor "User" as US
+
+rectangle "Sistem Prediksi Siswa Berprestasi" {
+    
+    rectangle "Fitur Super Admin" as BoxSA #FFE4E1 {
+        usecase "Menambah User (Register)" as UC_AddUser
+        usecase "Input Data User" as UC_InputDataUser
+        usecase "Melihat Daftar User" as UC_ViewUsers
+        usecase "Mengedit User" as UC_EditUser
+        usecase "Menghapus User" as UC_DeleteUser
+    }
+    
+    rectangle "Fitur Admin" as BoxAD #E6F3FF {
+        usecase "Membuat Model CART" as UC_CreateModel
+        usecase "Upload Dataset" as UC_UploadDataset
+        usecase "Menghapus Model" as UC_DeleteModel
+    }
+    
+    rectangle "Fitur User" as BoxUS #E8F5E9 {
+        usecase "Login" as UC_Login
+        usecase "Input Username" as UC_InputUsername
+        usecase "Input Password" as UC_InputPassword
+        usecase "Logout" as UC_Logout
+        usecase "Melihat Dashboard" as UC_Dashboard
+        usecase "Edit Profil" as UC_EditProfile
+        usecase "Input Data Profil" as UC_InputProfil
+        usecase "Melihat Daftar Model" as UC_ViewModels
+        usecase "Download Template CSV" as UC_DownloadTemplate
+        usecase "Melakukan Prediksi Tunggal" as UC_SinglePred
+        usecase "Input Data Siswa" as UC_InputDataSiswa
+        usecase "Melakukan Prediksi Batch" as UC_BatchPred
+        usecase "Upload File CSV" as UC_UploadCSV
+        usecase "Download Hasil Prediksi" as UC_DownloadResult
+    }
+    
+    ' Stack kotak secara vertikal
+    BoxSA -[hidden]down- BoxAD
+    BoxAD -[hidden]down- BoxUS
+}
+
+' Stack fitur Super Admin secara vertikal
+UC_AddUser -[hidden]down- UC_InputDataUser
+UC_InputDataUser -[hidden]down- UC_ViewUsers
+UC_ViewUsers -[hidden]down- UC_EditUser
+UC_EditUser -[hidden]down- UC_DeleteUser
+
+' Stack fitur Admin secara vertikal
+UC_CreateModel -[hidden]down- UC_UploadDataset
+UC_UploadDataset -[hidden]down- UC_DeleteModel
+
+' Stack fitur User secara vertikal
+UC_Login -[hidden]down- UC_InputUsername
+UC_InputUsername -[hidden]down- UC_InputPassword
+UC_InputPassword -[hidden]down- UC_Logout
+UC_Logout -[hidden]down- UC_Dashboard
+UC_Dashboard -[hidden]down- UC_EditProfile
+UC_EditProfile -[hidden]down- UC_InputProfil
+UC_InputProfil -[hidden]down- UC_ViewModels
+UC_ViewModels -[hidden]down- UC_DownloadTemplate
+UC_DownloadTemplate -[hidden]down- UC_SinglePred
+UC_SinglePred -[hidden]down- UC_InputDataSiswa
+UC_InputDataSiswa -[hidden]down- UC_BatchPred
+UC_BatchPred -[hidden]down- UC_UploadCSV
+UC_UploadCSV -[hidden]down- UC_DownloadResult
+
+' Super Admin connections (warna merah)
+SA -[#DC143C]-> UC_AddUser
+SA -[#DC143C]-> UC_ViewUsers
+SA -[#DC143C]-> UC_EditUser
+SA -[#DC143C]-> UC_DeleteUser
+
+' Admin connections (warna biru)
+AD -[#1E90FF]-> UC_CreateModel
+AD -[#1E90FF]-> UC_DeleteModel
+
+' User connections (warna hijau)
+US -[#228B22]-> UC_Login
+US -[#228B22]-> UC_Logout
+US -[#228B22]-> UC_EditProfile
+US -[#228B22]-> UC_Dashboard
+US -[#228B22]-> UC_ViewModels
+US -[#228B22]-> UC_DownloadTemplate
+US -[#228B22]-> UC_SinglePred
+US -[#228B22]-> UC_BatchPred
+US -[#228B22]-> UC_DownloadResult
+
+' <<include>> relationships (wajib dilakukan) - warna ungu
+UC_Login .[#9932CC].> UC_InputUsername : <<include>>
+UC_Login .[#9932CC].> UC_InputPassword : <<include>>
+UC_CreateModel .[#9932CC].> UC_UploadDataset : <<include>>
+UC_BatchPred .[#9932CC].> UC_UploadCSV : <<include>>
+UC_SinglePred .[#9932CC].> UC_InputDataSiswa : <<include>>
+UC_EditProfile .[#9932CC].> UC_InputProfil : <<include>>
+UC_AddUser .[#9932CC].> UC_InputDataUser : <<include>>
+
+' <<extend>> relationships (opsional) - warna oranye
+UC_DownloadResult .[#FF8C00].> UC_SinglePred : <<extend>>
+UC_DownloadResult .[#FF8C00].> UC_BatchPred : <<extend>>
+UC_DownloadTemplate .[#FF8C00].> UC_CreateModel : <<extend>>
+UC_EditUser .[#FF8C00].> UC_ViewUsers : <<extend>>
+UC_DeleteUser .[#FF8C00].> UC_ViewUsers : <<extend>>
+UC_DeleteModel .[#FF8C00].> UC_ViewModels : <<extend>>
+
+' Admin inherits User features (warna biru)
+AD -[#1E90FF]-> UC_Login
+AD -[#1E90FF]-> UC_Logout
+AD -[#1E90FF]-> UC_EditProfile
+AD -[#1E90FF]-> UC_Dashboard
+AD -[#1E90FF]-> UC_ViewModels
+AD -[#1E90FF]-> UC_DownloadTemplate
+AD -[#1E90FF]-> UC_SinglePred
+AD -[#1E90FF]-> UC_BatchPred
+AD -[#1E90FF]-> UC_DownloadResult
+
+' Super Admin inherits Admin features (warna merah)
+SA -[#DC143C]-> UC_Login
+SA -[#DC143C]-> UC_Logout
+SA -[#DC143C]-> UC_EditProfile
+SA -[#DC143C]-> UC_Dashboard
+SA -[#DC143C]-> UC_ViewModels
+SA -[#DC143C]-> UC_CreateModel
+SA -[#DC143C]-> UC_DeleteModel
+SA -[#DC143C]-> UC_DownloadTemplate
+SA -[#DC143C]-> UC_SinglePred
+SA -[#DC143C]-> UC_BatchPred
+SA -[#DC143C]-> UC_DownloadResult
+
+@enduml
+```
+
 Sumber: Dokumen Pribadi
 
 Berdasarkan Gambar 4.1, dapat dilihat bahwa sistem memiliki tiga aktor utama dengan hak akses berbeda:
@@ -113,15 +259,17 @@ Sistem ini harus diawali dengan aktivitas _login_ dengan mengisi _form username_
 | **Use Case** | Login |
 |---|---|
 | **Aktor** | User / Admin / Super Admin |
+| **Include** | Input Username, Input Password |
+| **Extend** | - |
 | **Kondisi Awal** | Pengguna belum terautentikasi dan berada di halaman login |
 | **Kondisi Akhir** | Pengguna berhasil login dan masuk ke halaman dashboard |
-| **Deskripsi** | Pengguna dapat mengakses sistem dengan memasukkan kredensial yang valid |
+| **Deskripsi** | Pengguna dapat mengakses sistem dengan memasukkan kredensial yang valid. Use case ini _include_ Input Username dan Input Password karena kedua input tersebut wajib dilakukan untuk proses login. |
 
 | **Pengguna** | **Sistem** |
 |---|---|
 | Membuka halaman login | Menampilkan form login dengan field username dan password |
-| Mengisi username | |
-| Mengisi password | |
+| **[Include: Input Username]** Mengisi username | |
+| **[Include: Input Password]** Mengisi password | |
 | Klik tombol "Masuk" | |
 | | Memvalidasi username dan password |
 | | Jika valid: Membuat token JWT |
@@ -148,6 +296,8 @@ Setelah pengguna selesai menggunakan sistem, pengguna dapat melakukan logout unt
 | **Use Case** | Logout |
 |---|---|
 | **Aktor** | User / Admin / Super Admin |
+| **Include** | - |
+| **Extend** | - |
 | **Kondisi Awal** | Pengguna sudah login dan berada di halaman sistem |
 | **Kondisi Akhir** | Pengguna berhasil logout dan kembali ke halaman login |
 | **Deskripsi** | Pengguna dapat keluar dari sistem |
@@ -170,18 +320,21 @@ Pengguna dapat mengubah informasi profil seperti nama dan password. Skenario _Us
 | **Use Case** | Edit Profil |
 |---|---|
 | **Aktor** | User / Admin / Super Admin |
+| **Include** | Input Data Profil |
+| **Extend** | - |
 | **Kondisi Awal** | Pengguna sudah login dan berada di halaman sistem |
 | **Kondisi Akhir** | Data profil pengguna berhasil diperbarui |
-| **Deskripsi** | Pengguna dapat mengubah nama dan password profil |
+| **Deskripsi** | Pengguna dapat mengubah nama dan password profil. Use case ini _include_ Input Data Profil karena pengguna wajib mengisi data profil untuk melakukan perubahan. |
 
 | **Pengguna** | **Sistem** |
 |---|---|
 | Klik tombol profil di header | Menampilkan dropdown menu |
 | Klik menu "Edit Profil" | |
 | | Menampilkan dialog edit profil |
-| Mengisi nama baru (opsional) | |
-| Mengisi password baru (opsional) | |
-| Mengisi konfirmasi password | |
+| **[Include: Input Data Profil]** | |
+| - Mengisi nama baru (opsional) | |
+| - Mengisi password baru (opsional) | |
+| - Mengisi konfirmasi password | |
 | Klik tombol "Simpan" | |
 | | Memvalidasi data input |
 | | Jika valid: Menyimpan perubahan ke database |
@@ -199,6 +352,8 @@ Setelah login berhasil, pengguna akan diarahkan ke halaman dashboard yang menamp
 | **Use Case** | Melihat Dashboard |
 |---|---|
 | **Aktor** | User / Admin / Super Admin |
+| **Include** | - |
+| **Extend** | - |
 | **Kondisi Awal** | Pengguna sudah login dan berada di sistem |
 | **Kondisi Akhir** | Pengguna dapat melihat ringkasan statistik sistem |
 | **Deskripsi** | Pengguna dapat melihat dashboard dengan informasi total model, total dataset, akurasi model terbaru, total prediksi, dan grafik distribusi status |
@@ -226,9 +381,11 @@ Admin dan Super Admin dapat membuat model CART baru dengan mengupload dataset CS
 | **Use Case** | Membuat Model CART |
 |---|---|
 | **Aktor** | Admin / Super Admin |
+| **Include** | Upload Dataset |
+| **Extend** | Download Template CSV |
 | **Kondisi Awal** | Pengguna sudah login dengan role Admin atau Super Admin |
 | **Kondisi Akhir** | Model CART baru berhasil dibuat dan tersimpan di database |
-| **Deskripsi** | Pengguna dapat membuat model CART baru dengan mengupload file CSV dataset |
+| **Deskripsi** | Pengguna dapat membuat model CART baru dengan mengupload file CSV dataset. Use case ini _include_ Upload Dataset karena wajib mengupload file CSV untuk membuat model. Download Template CSV _extend_ use case ini karena pengguna dapat opsional mendownload template sebelum membuat model. |
 
 | **Pengguna** | **Sistem** |
 |---|---|
@@ -236,8 +393,9 @@ Admin dan Super Admin dapat membuat model CART baru dengan mengupload dataset CS
 | | Menampilkan halaman Manajemen Model |
 | Klik tombol "Buat Model" | |
 | | Menampilkan dialog Buat Model Baru |
+| **[Extend: Download Template CSV]** (opsional) Klik "Download Template" untuk mendapatkan format CSV | |
 | Mengisi nama model (opsional) | |
-| Memilih file CSV dataset | |
+| **[Include: Upload Dataset]** Memilih file CSV dataset | |
 | Klik tombol "Latih Model" | |
 | | Memvalidasi format file CSV |
 | | Memvalidasi kolom yang diperlukan |
@@ -270,15 +428,18 @@ Pengguna dapat melihat daftar model CART yang telah dibuat. Skenario _Use Case M
 | **Use Case** | Melihat Daftar Model |
 |---|---|
 | **Aktor** | User / Admin / Super Admin |
+| **Include** | - |
+| **Extend** | Menghapus Model |
 | **Kondisi Awal** | Pengguna sudah login dan berada di sistem |
 | **Kondisi Akhir** | Pengguna dapat melihat daftar model yang tersedia |
-| **Deskripsi** | Pengguna dapat melihat daftar model CART beserta informasi akurasi dan metrik |
+| **Deskripsi** | Pengguna dapat melihat daftar model CART beserta informasi akurasi dan metrik. Menghapus Model _extend_ use case ini karena pengguna dengan role Admin/Super Admin dapat opsional menghapus model dari daftar. |
 
 | **Pengguna** | **Sistem** |
 |---|---|
 | Klik menu "Model" | |
 | | Mengambil daftar model dari server |
 | | Menampilkan tabel daftar model dengan kolom: Nama Model, Akurasi, Precision, Recall, Dataset, Tanggal Dibuat, Aksi |
+| **[Extend: Menghapus Model]** (opsional) Admin/Super Admin dapat menghapus model | |
 
 Sumber: Dokumen Pribadi
 
@@ -291,9 +452,11 @@ Admin dan Super Admin dapat menghapus model CART yang sudah tidak diperlukan. Sk
 | **Use Case** | Menghapus Model |
 |---|---|
 | **Aktor** | Admin / Super Admin |
-| **Kondisi Awal** | Model yang akan dihapus sudah ada di sistem |
+| **Include** | - |
+| **Extend** | - (Use case ini _extend_ dari Melihat Daftar Model) |
+| **Kondisi Awal** | Model yang akan dihapus sudah ada di sistem, pengguna berada di halaman Melihat Daftar Model |
 | **Kondisi Akhir** | Model berhasil dihapus dari sistem |
-| **Deskripsi** | Pengguna dapat menghapus model CART yang tidak diperlukan |
+| **Deskripsi** | Pengguna dapat menghapus model CART yang tidak diperlukan. Use case ini merupakan _extend_ dari Melihat Daftar Model karena aksi menghapus bersifat opsional dan dilakukan dari halaman daftar model. |
 
 | **Pengguna** | **Sistem** |
 |---|---|
@@ -316,9 +479,11 @@ Pengguna dapat mendownload template CSV untuk format data yang benar. Skenario _
 | **Use Case** | Download Template CSV |
 |---|---|
 | **Aktor** | User / Admin / Super Admin |
+| **Include** | - |
+| **Extend** | - (Use case ini _extend_ dari Membuat Model CART) |
 | **Kondisi Awal** | Pengguna sudah login dan berada di halaman Model atau Prediksi |
 | **Kondisi Akhir** | File template CSV berhasil didownload |
-| **Deskripsi** | Pengguna dapat mendownload template CSV dengan format kolom yang benar |
+| **Deskripsi** | Pengguna dapat mendownload template CSV dengan format kolom yang benar. Use case ini merupakan _extend_ dari Membuat Model CART karena bersifat opsional untuk membantu pengguna mengetahui format file yang benar. |
 
 | **Pengguna** | **Sistem** |
 |---|---|
@@ -338,9 +503,11 @@ Pengguna dapat melakukan prediksi untuk satu siswa dengan mengisi form nilai. Sk
 | **Use Case** | Melakukan Prediksi Tunggal |
 |---|---|
 | **Aktor** | User / Admin / Super Admin |
+| **Include** | Input Data Siswa |
+| **Extend** | Download Hasil Prediksi |
 | **Kondisi Awal** | Terdapat minimal satu model yang sudah dibuat |
 | **Kondisi Akhir** | Hasil prediksi ditampilkan kepada pengguna |
-| **Deskripsi** | Pengguna dapat melakukan prediksi status prestasi untuk satu siswa |
+| **Deskripsi** | Pengguna dapat melakukan prediksi status prestasi untuk satu siswa. Use case ini _include_ Input Data Siswa karena pengguna wajib mengisi data nilai siswa. Download Hasil Prediksi _extend_ use case ini karena pengguna dapat opsional mendownload hasil prediksi. |
 
 | **Pengguna** | **Sistem** |
 |---|---|
@@ -349,21 +516,22 @@ Pengguna dapat melakukan prediksi untuk satu siswa dengan mengisi form nilai. Sk
 | Pilih model yang akan digunakan | |
 | Klik tab "Satu Siswa" | |
 | | Menampilkan form input nilai |
-| Mengisi nama siswa (opsional) | |
-| Mengisi nilai PAI | |
-| Mengisi nilai Pendidikan Pancasila | |
-| Mengisi nilai Bahasa Indonesia | |
-| Mengisi nilai Matematika | |
-| Mengisi nilai IPA | |
-| Mengisi nilai IPS | |
-| Mengisi nilai Bahasa Inggris | |
-| Mengisi nilai Penjas | |
-| Mengisi nilai TIK | |
-| Mengisi nilai SBK | |
-| Mengisi nilai Prakarya | |
-| Mengisi nilai Bahasa Sunda | |
-| Mengisi nilai BTQ | |
-| Mengisi jumlah Absen | |
+| **[Include: Input Data Siswa]** | |
+| - Mengisi nama siswa (opsional) | |
+| - Mengisi nilai PAI | |
+| - Mengisi nilai Pendidikan Pancasila | |
+| - Mengisi nilai Bahasa Indonesia | |
+| - Mengisi nilai Matematika | |
+| - Mengisi nilai IPA | |
+| - Mengisi nilai IPS | |
+| - Mengisi nilai Bahasa Inggris | |
+| - Mengisi nilai Penjas | |
+| - Mengisi nilai TIK | |
+| - Mengisi nilai SBK | |
+| - Mengisi nilai Prakarya | |
+| - Mengisi nilai Bahasa Sunda | |
+| - Mengisi nilai BTQ | |
+| - Mengisi jumlah Absen | |
 | Klik tombol "Prediksi" | |
 | | Memvalidasi data input |
 | | Mengirim data ke model CART |
@@ -371,6 +539,7 @@ Pengguna dapat melakukan prediksi untuk satu siswa dengan mengisi form nilai. Sk
 | | Menyimpan hasil prediksi ke database |
 | | Menampilkan hasil prediksi: Status (Berprestasi/Tidak Berprestasi), Probabilitas |
 | | Menampilkan notifikasi "Prediksi berhasil" |
+| **[Extend: Download Hasil Prediksi]** (opsional) | |
 
 Sumber: Dokumen Pribadi
 
@@ -383,9 +552,11 @@ Pengguna dapat melakukan prediksi untuk banyak siswa sekaligus dengan mengupload
 | **Use Case** | Melakukan Prediksi Batch |
 |---|---|
 | **Aktor** | User / Admin / Super Admin |
+| **Include** | Upload File CSV |
+| **Extend** | Download Hasil Prediksi |
 | **Kondisi Awal** | Terdapat minimal satu model yang sudah dibuat |
 | **Kondisi Akhir** | Hasil prediksi batch ditampilkan kepada pengguna |
-| **Deskripsi** | Pengguna dapat melakukan prediksi status prestasi untuk banyak siswa sekaligus |
+| **Deskripsi** | Pengguna dapat melakukan prediksi status prestasi untuk banyak siswa sekaligus. Use case ini _include_ Upload File CSV karena pengguna wajib mengupload file CSV berisi data siswa. Download Hasil Prediksi _extend_ use case ini karena pengguna dapat opsional mendownload hasil prediksi. |
 
 | **Pengguna** | **Sistem** |
 |---|---|
@@ -394,7 +565,7 @@ Pengguna dapat melakukan prediksi untuk banyak siswa sekaligus dengan mengupload
 | Pilih model yang akan digunakan | |
 | Klik tab "Banyak Siswa" | |
 | | Menampilkan form upload file |
-| Memilih file CSV berisi data siswa | |
+| **[Include: Upload File CSV]** Memilih file CSV berisi data siswa | |
 | Klik tombol "Prediksi" | |
 | | Memvalidasi format file CSV |
 | | Memvalidasi kolom yang diperlukan (nama wajib, kode_unik opsional) |
@@ -405,6 +576,7 @@ Pengguna dapat melakukan prediksi untuk banyak siswa sekaligus dengan mengupload
 | | Menampilkan ringkasan: Total Data, Jumlah Berprestasi, Jumlah Tidak Berprestasi |
 | | Menampilkan tabel hasil prediksi (10 data pertama) |
 | | Menampilkan notifikasi "Prediksi batch berhasil. [X] data berhasil diprediksi" |
+| **[Extend: Download Hasil Prediksi]** (opsional) Klik "Download Hasil" | |
 
 Sumber: Dokumen Pribadi
 
@@ -417,13 +589,15 @@ Pengguna dapat mendownload hasil prediksi batch dalam format CSV. Skenario _Use 
 | **Use Case** | Download Hasil Prediksi |
 |---|---|
 | **Aktor** | User / Admin / Super Admin |
-| **Kondisi Awal** | Pengguna sudah melakukan prediksi batch |
+| **Include** | - |
+| **Extend** | - (Use case ini _extend_ dari Melakukan Prediksi Tunggal dan Melakukan Prediksi Batch) |
+| **Kondisi Awal** | Pengguna sudah melakukan prediksi tunggal atau batch |
 | **Kondisi Akhir** | File hasil prediksi berhasil didownload |
-| **Deskripsi** | Pengguna dapat mendownload hasil prediksi batch dalam format CSV |
+| **Deskripsi** | Pengguna dapat mendownload hasil prediksi dalam format CSV. Use case ini merupakan _extend_ dari Melakukan Prediksi Tunggal dan Melakukan Prediksi Batch karena bersifat opsional setelah melakukan prediksi. |
 
 | **Pengguna** | **Sistem** |
 |---|---|
-| Klik tombol "Download Hasil" pada hasil prediksi batch | |
+| Klik tombol "Download Hasil" pada hasil prediksi | |
 | | Membuat file CSV dengan kolom: nama, kode_unik, nilai-nilai, prediksi, probabilitas_berprestasi, probabilitas_tidak_berprestasi |
 | | Mengirim file untuk didownload |
 | | Browser mendownload file "hasil_prediksi.csv" |
@@ -440,30 +614,36 @@ Super Admin dapat melihat daftar semua user yang terdaftar di sistem. Skenario _
 | **Use Case** | Melihat Daftar User |
 |---|---|
 | **Aktor** | Super Admin |
+| **Include** | - |
+| **Extend** | Mengedit User, Menghapus User |
 | **Kondisi Awal** | Pengguna sudah login sebagai Super Admin |
 | **Kondisi Akhir** | Daftar user ditampilkan kepada pengguna |
-| **Deskripsi** | Super Admin dapat melihat daftar semua user yang terdaftar |
+| **Deskripsi** | Super Admin dapat melihat daftar semua user yang terdaftar. Mengedit User dan Menghapus User _extend_ use case ini karena aksi tersebut bersifat opsional dan dilakukan dari halaman daftar user. |
 
 | **Pengguna** | **Sistem** |
 |---|---|
 | Klik menu "Users" | |
 | | Mengambil daftar user dari server |
 | | Menampilkan tabel daftar user dengan kolom: Username, Nama, Role, Tanggal Dibuat, Aksi |
+| **[Extend: Mengedit User]** (opsional) Klik ikon edit pada baris user | |
+| **[Extend: Menghapus User]** (opsional) Klik ikon hapus pada baris user | |
 
 Sumber: Dokumen Pribadi
 
-##### m. Skenario Use Case Menambah User
+##### m. Skenario Use Case Menambah User (Register)
 
-Super Admin dapat menambahkan user baru ke sistem. Skenario _Use Case Menambah User_ ditunjukkan pada Tabel 4.13 berikut ini:
+Super Admin dapat menambahkan user baru ke sistem (Register). Skenario _Use Case Menambah User (Register)_ ditunjukkan pada Tabel 4.13 berikut ini:
 
-**Tabel 4.13 Skenario Use Case Menambah User**
+**Tabel 4.13 Skenario Use Case Menambah User (Register)**
 
-| **Use Case** | Menambah User |
+| **Use Case** | Menambah User (Register) |
 |---|---|
 | **Aktor** | Super Admin |
+| **Include** | Input Data User |
+| **Extend** | - |
 | **Kondisi Awal** | Pengguna sudah login sebagai Super Admin |
 | **Kondisi Akhir** | User baru berhasil ditambahkan ke sistem |
-| **Deskripsi** | Super Admin dapat menambahkan user baru dengan role tertentu |
+| **Deskripsi** | Super Admin dapat menambahkan user baru (Register) dengan role tertentu. Use case ini _include_ Input Data User karena wajib mengisi data user untuk mendaftarkan user baru. |
 
 | **Pengguna** | **Sistem** |
 |---|---|
@@ -471,11 +651,12 @@ Super Admin dapat menambahkan user baru ke sistem. Skenario _Use Case Menambah U
 | | Menampilkan halaman Manajemen User |
 | Klik tombol "Tambah User" | |
 | | Menampilkan dialog Tambah User Baru |
-| Mengisi username | |
-| Mengisi nama lengkap | |
-| Memilih role (User/Admin/Super Admin) | |
-| Mengisi password | |
-| Mengisi konfirmasi password | |
+| **[Include: Input Data User]** | |
+| - Mengisi username | |
+| - Mengisi nama lengkap | |
+| - Memilih role (User/Admin/Super Admin) | |
+| - Mengisi password | |
+| - Mengisi konfirmasi password | |
 | Klik tombol "Simpan" | |
 | | Memvalidasi data input |
 | | Memeriksa username sudah digunakan atau belum |
@@ -503,9 +684,11 @@ Super Admin dapat mengedit informasi user yang ada. Skenario _Use Case Mengedit 
 | **Use Case** | Mengedit User |
 |---|---|
 | **Aktor** | Super Admin |
-| **Kondisi Awal** | User yang akan diedit sudah ada di sistem |
+| **Include** | - |
+| **Extend** | - (Use case ini _extend_ dari Melihat Daftar User) |
+| **Kondisi Awal** | User yang akan diedit sudah ada di sistem, pengguna berada di halaman Melihat Daftar User |
 | **Kondisi Akhir** | Data user berhasil diperbarui |
-| **Deskripsi** | Super Admin dapat mengedit informasi user (username, nama, role, password) |
+| **Deskripsi** | Super Admin dapat mengedit informasi user (username, nama, role, password). Use case ini merupakan _extend_ dari Melihat Daftar User karena aksi mengedit bersifat opsional dan dilakukan dari halaman daftar user. |
 
 | **Pengguna** | **Sistem** |
 |---|---|
@@ -542,9 +725,11 @@ Super Admin dapat menghapus user dari sistem. Skenario _Use Case Menghapus User_
 | **Use Case** | Menghapus User |
 |---|---|
 | **Aktor** | Super Admin |
-| **Kondisi Awal** | User yang akan dihapus sudah ada di sistem |
+| **Include** | - |
+| **Extend** | - (Use case ini _extend_ dari Melihat Daftar User) |
+| **Kondisi Awal** | User yang akan dihapus sudah ada di sistem, pengguna berada di halaman Melihat Daftar User |
 | **Kondisi Akhir** | User berhasil dihapus dari sistem |
-| **Deskripsi** | Super Admin dapat menghapus user dari sistem (kecuali akun superadmin utama dan akun sendiri) |
+| **Deskripsi** | Super Admin dapat menghapus user dari sistem (kecuali akun superadmin utama dan akun sendiri). Use case ini merupakan _extend_ dari Melihat Daftar User karena aksi menghapus bersifat opsional dan dilakukan dari halaman daftar user. |
 
 | **Pengguna** | **Sistem** |
 |---|---|
