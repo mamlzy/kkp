@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Brain, Database, Target, TrendingUp } from 'lucide-react';
+import { Brain, Target, TrendingUp } from 'lucide-react';
 import {
   PieChart,
   Pie,
@@ -84,7 +84,7 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className='animate-fade-in stagger-2 border-none shadow-lg hover:shadow-xl transition-shadow'>
+        {/* <Card className='animate-fade-in stagger-2 border-none shadow-lg hover:shadow-xl transition-shadow'>
           <CardHeader className='flex flex-row items-center justify-between pb-2'>
             <CardTitle className='text-sm font-medium text-muted-foreground'>
               Total Dataset
@@ -101,7 +101,7 @@ export function Dashboard() {
               Dataset tersimpan
             </p>
           </CardContent>
-        </Card>
+        </Card> */}
 
         <Card className='animate-fade-in stagger-3 border-none shadow-lg hover:shadow-xl transition-shadow'>
           <CardHeader className='flex flex-row items-center justify-between pb-2'>

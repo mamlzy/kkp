@@ -114,7 +114,7 @@
 - Mempermudah analisis performa siswa secara massal
 - Menyediakan visualisasi data yang mudah dipahami
 
-![Halaman Utama SIPRESTA]
+![Halaman Utama SIPRESTA](assets/manual-book/dashboard-full.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: / (Dashboard)
@@ -161,7 +161,7 @@ SIPRESTA memiliki 3 tingkatan pengguna dengan hak akses berbeda:
 - ✅ Dapat melakukan prediksi siswa
 - ❌ **Tidak dapat** mengelola pengguna
 
-![Perbandingan Menu Berdasarkan Role]
+![Perbandingan Menu Berdasarkan Role](assets/manual-book/dashboard-nav.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: / (Dashboard)
@@ -182,7 +182,7 @@ Untuk mulai menggunakan SIPRESTA, Anda perlu masuk dengan akun yang telah diberi
 
 **Langkah 1:** Buka browser dan akses alamat SIPRESTA
 
-![Halaman Login SIPRESTA]
+![Halaman Login SIPRESTA](assets/manual-book/login-page.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /login
@@ -194,7 +194,7 @@ Untuk mulai menggunakan SIPRESTA, Anda perlu masuk dengan akun yang telah diberi
 
 **Langkah 2:** Masukkan **Username** Anda pada kolom yang tersedia
 
-![Input Username]
+![Input Username](assets/manual-book/login-username.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /login
@@ -207,7 +207,7 @@ Untuk mulai menggunakan SIPRESTA, Anda perlu masuk dengan akun yang telah diberi
 
 💡 **Tips:** Klik ikon 👁️ di samping kolom password untuk melihat password yang Anda ketik
 
-![Input Password]
+![Input Password](assets/manual-book/login-password.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /login
@@ -218,7 +218,7 @@ Untuk mulai menggunakan SIPRESTA, Anda perlu masuk dengan akun yang telah diberi
 
 **Langkah 4:** Klik tombol **"Masuk"** berwarna biru
 
-![Tombol Masuk]
+![Tombol Masuk](assets/manual-book/login-password.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /login
@@ -243,7 +243,7 @@ Untuk mulai menggunakan SIPRESTA, Anda perlu masuk dengan akun yang telah diberi
 
 Setelah login, Anda akan melihat **menu navigasi** di bagian atas halaman.
 
-![Menu Navigasi SIPRESTA]
+![Menu Navigasi SIPRESTA](assets/manual-book/dashboard-nav.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: / (Dashboard)
@@ -274,7 +274,7 @@ Selalu logout setelah selesai menggunakan SIPRESTA untuk menjaga keamanan akun A
 
 **Langkah 1:** Klik ikon menu (☰) di pojok kanan atas
 
-![Membuka Menu]
+![Membuka Menu](assets/manual-book/profile-menu-dropdown.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: / (Dashboard)
@@ -292,7 +292,7 @@ Selalu logout setelah selesai menggunakan SIPRESTA untuk menjaga keamanan akun A
 - Edit Profil
 - **Keluar**
 
-![Menu Terbuka]
+![Menu Terbuka](assets/manual-book/profile-menu-dropdown.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: / (Dashboard)
@@ -319,7 +319,7 @@ Selalu logout setelah selesai menggunakan SIPRESTA untuk menjaga keamanan akun A
 
 Dashboard adalah halaman utama yang menampilkan **ringkasan sistem prediksi siswa berprestasi**. Di sini Anda dapat melihat statistik penting secara sekilas.
 
-![Dashboard SIPRESTA]
+![Dashboard SIPRESTA](assets/manual-book/dashboard-full.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: / (Dashboard)
@@ -336,7 +336,7 @@ Di bagian atas dashboard, terdapat **4 kartu statistik** yang memberikan informa
 
 Menunjukkan jumlah model prediksi yang telah dilatih dan tersimpan dalam sistem.
 
-![Kartu Total Model]
+![Kartu Total Model](assets/manual-book/dashboard-stats-model.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: / (Dashboard)
@@ -366,7 +366,7 @@ Grafik **pie chart (donat)** menampilkan perbandingan hasil prediksi:
 - 🔵 **Berprestasi:** Siswa yang diprediksi akan berprestasi
 - 🟠 **Tidak Berprestasi:** Siswa yang diprediksi tidak akan berprestasi
 
-![Grafik Distribusi Status Prediksi]
+![Grafik Distribusi Status Prediksi](assets/manual-book/dashboard-chart-pie.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: / (Dashboard)
@@ -385,7 +385,7 @@ Grafik **pie chart (donat)** menampilkan perbandingan hasil prediksi:
 
 Bagian **"Akurasi Model"** menampilkan perbandingan akurasi dari model-model yang tersedia.
 
-![Grafik Akurasi Model]
+![Grafik Akurasi Model](assets/manual-book/dashboard-chart-bar.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: / (Dashboard)
@@ -412,7 +412,7 @@ Model adalah "otak" dari sistem prediksi. Model dilatih menggunakan data histori
 
 **Langkah 1:** Klik menu **"Model"** pada navigasi
 
-![Menu Model]
+![Menu Model](assets/manual-book/model-list.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /model
@@ -433,7 +433,7 @@ Model adalah "otak" dari sistem prediksi. Model dilatih menggunakan data histori
 | **Tanggal Dibuat** | Waktu model dibuat                             |
 | **Aksi**           | Tombol edit dan hapus                          |
 
-![Tabel Daftar Model]
+![Tabel Daftar Model](assets/manual-book/model-list.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /model
@@ -450,7 +450,7 @@ Untuk membuat model baru, Anda perlu menyiapkan file **CSV** dengan format yang 
 
 **Langkah 1:** Pada halaman Model, klik tombol **"+ Buat Model"** berwarna biru di pojok kanan atas
 
-![Tombol Buat Model]
+![Tombol Buat Model](assets/manual-book/model-list.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /model
@@ -461,7 +461,7 @@ Untuk membuat model baru, Anda perlu menyiapkan file **CSV** dengan format yang 
 
 **Langkah 2:** Modal **"Buat Model Baru"** akan muncul
 
-![Modal Buat Model Baru]
+![Modal Buat Model Baru](assets/manual-book/model-create-modal.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /model
@@ -520,7 +520,7 @@ File CSV harus memiliki kolom-kolom berikut:
 
 **Langkah 2:** Klik ikon **✏️ (pensil)** pada kolom Aksi
 
-![Tombol Edit Model]
+![Tombol Edit Model](assets/manual-book/model-edit-btn.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /model
@@ -545,7 +545,7 @@ File CSV harus memiliki kolom-kolom berikut:
 
 **Langkah 2:** Klik ikon **🗑️ (tempat sampah)** pada kolom Aksi
 
-![Tombol Hapus Model]
+![Tombol Hapus Model](assets/manual-book/model-delete-btn.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /model
@@ -566,7 +566,7 @@ Untuk memudahkan pembuatan file dataset, SIPRESTA menyediakan template CSV yang 
 
 **Langkah 1:** Pada halaman Model, klik tombol **"Download Template"**
 
-![Tombol Download Template]
+![Tombol Download Template](assets/manual-book/model-list.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /model
@@ -597,7 +597,7 @@ Gunakan fitur ini untuk memprediksi satu siswa secara individual.
 
 **Langkah 1:** Klik menu **"Prediksi"** pada navigasi
 
-![Menu Prediksi]
+![Menu Prediksi](assets/manual-book/predict-single.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /prediksi
@@ -610,7 +610,7 @@ Gunakan fitur ini untuk memprediksi satu siswa secara individual.
 
 **Langkah 3:** Pilih **Model** yang akan digunakan dari dropdown
 
-![Pilih Model]
+![Pilih Model](assets/manual-book/predict-model-select.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /prediksi
@@ -640,7 +640,7 @@ Gunakan fitur ini untuk memprediksi satu siswa secara individual.
 | BTQ                  | 0 - 100                 |
 | Absen                | Jumlah hari tidak hadir |
 
-![Form Input Nilai Siswa]
+![Form Input Nilai Siswa](assets/manual-book/predict-single.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /prediksi
@@ -651,7 +651,7 @@ Gunakan fitur ini untuk memprediksi satu siswa secara individual.
 
 **Langkah 6:** Klik tombol **"Prediksi"** 🔮
 
-![Tombol Prediksi]
+![Tombol Prediksi](assets/manual-book/predict-single.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /prediksi
@@ -679,7 +679,7 @@ Gunakan fitur ini untuk memprediksi banyak siswa sekaligus menggunakan file CSV.
 
 **Langkah 2:** Klik tab **"Banyak Siswa"** 👥
 
-![Tab Banyak Siswa]
+![Tab Banyak Siswa](assets/manual-book/predict-batch.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /prediksi
@@ -692,7 +692,7 @@ Gunakan fitur ini untuk memprediksi banyak siswa sekaligus menggunakan file CSV.
 
 **Langkah 4:** Klik **"Choose File"** untuk memilih file CSV
 
-![Form Upload CSV Prediksi]
+![Form Upload CSV Prediksi](assets/manual-book/predict-batch.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /prediksi
@@ -751,7 +751,7 @@ File CSV harus memiliki kolom:
 
 **Langkah 1:** Klik menu **"Users"** pada navigasi
 
-![Menu Users]
+![Menu Users](assets/manual-book/users-list.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /register
@@ -772,7 +772,7 @@ File CSV harus memiliki kolom:
 | **Tanggal Dibuat** | Waktu akun dibuat                        |
 | **Aksi**           | Tombol edit dan hapus                    |
 
-![Tabel Daftar Pengguna]
+![Tabel Daftar Pengguna](assets/manual-book/users-list.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /register
@@ -794,7 +794,7 @@ File CSV harus memiliki kolom:
 
 **Langkah 1:** Klik tombol **"+ Tambah User"** berwarna biru
 
-![Tombol Tambah User]
+![Tombol Tambah User](assets/manual-book/users-list.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /register
@@ -805,7 +805,7 @@ File CSV harus memiliki kolom:
 
 **Langkah 2:** Modal **"Tambah User Baru"** akan muncul
 
-![Modal Tambah User]
+![Modal Tambah User](assets/manual-book/users-add-modal.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /register
@@ -845,7 +845,7 @@ File CSV harus memiliki kolom:
 
 **Langkah 2:** Klik ikon **✏️ (pensil)** pada kolom Aksi
 
-![Tombol Edit User]
+![Tombol Edit User](assets/manual-book/users-list.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /register
@@ -873,7 +873,7 @@ File CSV harus memiliki kolom:
 
 **Langkah 2:** Klik ikon **🗑️ (tempat sampah)** pada kolom Aksi
 
-![Tombol Hapus User]
+![Tombol Hapus User](assets/manual-book/users-list.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /register
@@ -906,7 +906,7 @@ Setiap pengguna dapat mengedit profil mereka sendiri.
 
 **Langkah 2:** Klik **"Edit Profil"**
 
-![Menu Edit Profil]
+![Menu Edit Profil](assets/manual-book/profile-menu-dropdown.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: / (Dashboard)
@@ -917,7 +917,7 @@ Setiap pengguna dapat mengedit profil mereka sendiri.
 
 **Langkah 3:** Modal **"Edit Profil"** akan muncul
 
-![Modal Edit Profil]
+![Modal Edit Profil](assets/manual-book/profile-edit-modal.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: / (Dashboard)
