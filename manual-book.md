@@ -161,8 +161,6 @@ SIPRESTA memiliki 3 tingkatan pengguna dengan hak akses berbeda:
 - ✅ Dapat melakukan prediksi siswa
 - ❌ **Tidak dapat** mengelola pengguna
 
-![Perbandingan Menu Berdasarkan Role](assets/manual-book/dashboard-nav.png)
-
 <!-- 📸 IMAGE NEEDED:
      URL: / (Dashboard)
      Show: Tiga screenshot berdampingan menunjukkan menu navigasi untuk Super Admin (dengan menu Users), Admin (tanpa menu Users), dan User (tanpa menu Users)
@@ -272,7 +270,7 @@ Selalu logout setelah selesai menggunakan SIPRESTA untuk menjaga keamanan akun A
 
 ### Langkah-langkah Logout:
 
-**Langkah 1:** Klik ikon menu (☰) di pojok kanan atas
+**Langkah 1:** Klik tombol yang terdapat nama akun (contoh Super Admin) di pojok kanan atas
 
 ![Membuka Menu](assets/manual-book/profile-menu-dropdown.png)
 
@@ -345,9 +343,9 @@ Menunjukkan jumlah model prediksi yang telah dilatih dan tersimpan dalam sistem.
      State: Menampilkan angka "1" atau lebih
 -->
 
-### 📂 Total Dataset
+<!-- ### 📂 Total Dataset
 
-Menunjukkan jumlah dataset yang tersimpan dalam sistem.
+Menunjukkan jumlah dataset yang tersimpan dalam sistem. -->
 
 ### 🎯 Akurasi Model Terbaru
 
@@ -355,9 +353,13 @@ Menampilkan **tingkat akurasi** model prediksi terbaru dalam persentase. Semakin
 
 💡 **Tips:** Akurasi di atas **80%** dianggap baik untuk model prediksi.
 
+![Kartu Akurasi Model Terbaru](assets/manual-book/dashboard-stats-model-accuration.png)
+
 ### 📈 Total Prediksi
 
 Menunjukkan total prediksi yang telah dilakukan menggunakan sistem.
+
+![Kartu Total Prediksi](assets/manual-book/dashboard-stats-prediction.png)
 
 ## 3.3 Grafik Distribusi Prediksi
 
@@ -432,8 +434,6 @@ Model adalah "otak" dari sistem prediksi. Model dilatih menggunakan data histori
 | **Dataset**        | Nama file dataset yang digunakan untuk melatih |
 | **Tanggal Dibuat** | Waktu model dibuat                             |
 | **Aksi**           | Tombol edit dan hapus                          |
-
-![Tabel Daftar Model](assets/manual-book/model-list.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /model
@@ -554,7 +554,9 @@ File CSV harus memiliki kolom-kolom berikut:
      State: Hover pada tombol hapus
 -->
 
-**Langkah 3:** Konfirmasi penghapusan jika diminta
+**Langkah 3:** Konfirmasi penghapusan
+
+![Konfirmasi Hapus Model](assets/manual-book/model-delete-confirmation.png)
 
 **Langkah 4:** Model akan dihapus dari daftar
 
@@ -610,7 +612,7 @@ Gunakan fitur ini untuk memprediksi satu siswa secara individual.
 
 **Langkah 3:** Pilih **Model** yang akan digunakan dari dropdown
 
-![Pilih Model](assets/manual-book/predict-model-select.png)
+![Pilih Model](assets/manual-book/predict-single-model-select.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /prediksi
@@ -620,6 +622,8 @@ Gunakan fitur ini untuk memprediksi satu siswa secara individual.
 -->
 
 **Langkah 4:** Isi **Nama Siswa** (opsional)
+
+![Form Input Nama Siswa](assets/manual-book/predict-student-name.png)
 
 **Langkah 5:** Isi nilai untuk setiap mata pelajaran:
 
@@ -640,7 +644,7 @@ Gunakan fitur ini untuk memprediksi satu siswa secara individual.
 | BTQ                  | 0 - 100                 |
 | Absen                | Jumlah hari tidak hadir |
 
-![Form Input Nilai Siswa](assets/manual-book/predict-single.png)
+![Form Input Nilai Siswa](assets/manual-book/predict-student-scores.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /prediksi
@@ -651,7 +655,7 @@ Gunakan fitur ini untuk memprediksi satu siswa secara individual.
 
 **Langkah 6:** Klik tombol **"Prediksi"** 🔮
 
-![Tombol Prediksi](assets/manual-book/predict-single.png)
+![Tombol Prediksi](assets/manual-book/predict-student-scores.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /prediksi
@@ -661,6 +665,8 @@ Gunakan fitur ini untuk memprediksi satu siswa secara individual.
 -->
 
 **Langkah 7:** Hasil prediksi akan ditampilkan
+
+![Tombol Prediksi](assets/manual-book/predict-single-result.png)
 
 ### Memahami Hasil Prediksi:
 
@@ -690,9 +696,13 @@ Gunakan fitur ini untuk memprediksi banyak siswa sekaligus menggunakan file CSV.
 
 **Langkah 3:** Pilih **Model** yang akan digunakan dari dropdown
 
+![Pilih Model](assets/manual-book/predict-batch-model-select.png)
+
 **Langkah 4:** Klik **"Choose File"** untuk memilih file CSV
 
 ![Form Upload CSV Prediksi](assets/manual-book/predict-batch.png)
+
+![File CSV Dipilih](assets/manual-book/predict-batch-file-choosed.png)
 
 <!-- 📸 IMAGE NEEDED:
      URL: /prediksi
@@ -714,7 +724,11 @@ File CSV harus memiliki kolom:
 
 **Langkah 5:** Klik tombol **"Prediksi"**
 
+![Tombol Prediksi](assets/manual-book/predict-batch-file-choosed.png)
+
 **Langkah 6:** Hasil prediksi untuk semua siswa akan ditampilkan
+
+![Hasil Prediksi](assets/manual-book/predict-batch-result.png)
 
 ## 5.3 Memahami Hasil Prediksi
 
@@ -856,9 +870,13 @@ File CSV harus memiliki kolom:
 
 **Langkah 3:** Modal edit akan muncul dengan data pengguna
 
+![Modal Edit User](assets/manual-book/users-edit-modal.png)
+
 **Langkah 4:** Ubah data yang diperlukan
 
 **Langkah 5:** Klik **"Simpan"** untuk menyimpan perubahan
+
+![Edit User Tombol Simpan](assets/manual-book/users-edit-modal.png)
 
 ## 6.4 Menghapus Pengguna
 
@@ -883,7 +901,9 @@ File CSV harus memiliki kolom:
      Notes: Tunjukkan bahwa Super Admin tidak memiliki tombol hapus
 -->
 
-**Langkah 3:** Konfirmasi penghapusan jika diminta
+**Langkah 3:** Konfirmasi penghapusan
+
+![Konfirmasi Hapus User](assets/manual-book/users-delete-confirmation.png)
 
 **Langkah 4:** Pengguna akan dihapus dari sistem
 
