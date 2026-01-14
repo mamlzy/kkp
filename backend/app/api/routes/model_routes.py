@@ -171,13 +171,15 @@ async def delete_model_endpoint(model_id: int, db: Session = Depends(get_db)):
 async def download_csv_template():
     """Download CSV template with required columns."""
     # Create template with header and example row
-    template_content = ",".join(REQUIRED_COLUMNS) + "\n"
-    template_content += "80,85,90,75,78,82,88,70,80,76,84,90,2,0,berprestasi\n"
+    # Create template with header and example row (include nama for identity)
+    header = ["nama"] + REQUIRED_COLUMNS
+    template_content = ",".join(header) + "\n"
+    template_content += "Siswa Contoh,80,85,90,75,78,82,88,70,80,76,84,90,2,0,berprestasi\n"
     
     return StreamingResponse(
         io.BytesIO(template_content.encode("utf-8")),
         media_type="text/csv",
-        headers={"Content-Disposition": "attachment; filename=template_siswa.csv"}
+        headers={"Content-Disposition": "attachment; filename=template-siswa.csv"}
     )
 
 

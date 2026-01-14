@@ -490,7 +490,7 @@ Pengguna dapat mendownload template CSV untuk format data yang benar. Skenario _
 | Klik tombol "Download Template" | |
 | | Membuat file CSV dengan header kolom yang diperlukan |
 | | Mengirim file untuk didownload |
-| | Browser mendownload file "template_siswa.csv" |
+| | Browser mendownload file "template-siswa.csv" |
 
 Sumber: Dokumen Pribadi
 
